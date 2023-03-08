@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "travelcompanion",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2023-03-08T06:39:54.664Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authtravelcompanionbdf2bae2",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

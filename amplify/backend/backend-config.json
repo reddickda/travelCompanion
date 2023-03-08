@@ -1,0 +1,70 @@
+{
+  "api": {
+    "travelcompanion": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "travelcompanionbdf2bae2"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authtravelcompanionbdf2bae2"
+              }
+            }
+          ],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2024-03-07T06:39:43.703Z",
+              "apiKeyExpirationDays": 365,
+              "description": "public"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "travelcompanionbdf2bae2": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "storage": {
+    "images": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}

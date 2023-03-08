@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "travelcompanion",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2024-03-07T06:39:43.703Z",
+      "keyDescription": "public"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": [
+      {
+        "mode": "AMAZON_COGNITO_USER_POOLS",
+        "cognitoUserPoolId": "authtravelcompanionbdf2bae2"
+      }
+    ]
+  }
+}

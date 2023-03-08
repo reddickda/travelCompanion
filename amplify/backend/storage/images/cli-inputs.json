@@ -1,0 +1,16 @@
+{
+  "resourceName": "images",
+  "policyUUID": "16a5831c",
+  "bucketName": "travelcompanion9d32090fe41441fcba3fd012acd2b9b0",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
