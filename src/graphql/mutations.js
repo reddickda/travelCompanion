@@ -10,6 +10,7 @@ export const createPost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner
@@ -27,6 +28,7 @@ export const updatePost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner
@@ -44,6 +46,7 @@ export const deletePost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner

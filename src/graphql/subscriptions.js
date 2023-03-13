@@ -10,6 +10,7 @@ export const onCreatePost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner
@@ -27,6 +28,7 @@ export const onUpdatePost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner
@@ -44,6 +46,7 @@ export const onDeletePost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner

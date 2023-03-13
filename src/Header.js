@@ -8,6 +8,7 @@ export default function Header() {
       <h1 className={headerStyle}>TravelCompanion</h1>
       <Link to="/" className={linkStyle}>All Posts</Link>
       <Link to="/myposts" className={linkStyle}>My Posts</Link>
+      <Link to="/allPostsMap" className={linkStyle}>Map</Link>
     </div>
   )
 }

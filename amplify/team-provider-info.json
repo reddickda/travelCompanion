@@ -12,14 +12,14 @@
       "AmplifyAppId": "d243sszublig3p"
     },
     "categories": {
-      "api": {
-        "travelcompanion": {}
-      },
       "auth": {
         "travelcompanionbdf2bae2": {}
       },
       "storage": {
         "images": {}
+      },
+      "api": {
+        "travelcompanion": {}
       }
     }
   }

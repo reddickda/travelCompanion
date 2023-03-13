@@ -14,6 +14,8 @@ import Post from './Post';
 import Header from './Header';
 import CreatePost from './CreatePost';
 import Button from './Button';
+import Map from './Map';
+
 
 function App() {
   /* create a couple of pieces of initial state */
@@ -49,7 +51,6 @@ function App() {
   async function setPostState(postsArray) {
     const user = await Auth.currentAuthenticatedUser();
     const myPostData = postsArray.filter(p => p.owner === user.username);
-    console.log('postsArray:' , postsArray)
     updateMyPosts(myPostData);
     updatePosts(postsArray);
   }
@@ -64,6 +65,7 @@ function App() {
               <Route exact path="/" element={<Posts posts={posts} />} />
               <Route path="/post/:id" element={<Post />} />
               <Route exact path="/myposts" element={<Posts posts={myPosts} />} />
+              <Route exact path="/allPostsMap" element={<Map posts={posts} />}/>
             </Routes>
           </div>
           <button type="button" onClick={() => signOut()}>Sign out</button>

@@ -4,6 +4,9 @@ import Button from './Button';
 import { v4 as uuid } from 'uuid';
 import { Storage, API, Auth } from 'aws-amplify';
 import { createPost } from './graphql/mutations';
+import ReactSearchBox from "react-search-box";
+import axios from 'axios';
+import { results } from './mockresponse';
 
 /* Initial state to hold form input, saving state */
 const initialState = {
@@ -20,6 +23,33 @@ export default function CreatePost({
 }) {
   /* 1. Create local state with useState hook */
   const [formState, updateFormState] = useState(initialState)
+  const [searchResults, setSearchResults] = useState([]);
+  const [locationString, setLocationString] = useState("");
+  const [latLong, setLatLong] = useState("");
+
+
+  async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
+
+    let baseUrl = 'https://api.tomtom.com/search/2/search/';
+
+    let queryString = `limit=${limit}&radius=${radius}&key=`;
+
+    let response = await axios.get(`${baseUrl}/${query}.json?${queryString}`);
+
+    return response.data.results;
+
+    // return results.results;
+}
+
+// TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
+// prevent bombing the search button
+  async function search(query) {
+    if (query.length > 0) {
+
+      let results = (await getPlaces(query));
+      setSearchResults(results);
+    }
+  }
 
   /* 2. onChangeText handler updates the form state when a user types into a form field */
   function onChangeText(e) {
@@ -38,11 +68,11 @@ export default function CreatePost({
   /* 4. Save the post  */
   async function save() {
     try {
-      const { name, description, location, image } = formState;
-      if (!name || !description || !location || !image.name) return;
+      const { name, description, image } = formState;
+      if (!name || !description || !locationString || !latLong || !image.name) return;
       updateFormState(currentState => ({ ...currentState, saving: true }));
       const postId = uuid();
-      const postInfo = { name, description, location, image: formState.image.name, id: postId };
+      const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId };
   
       await Storage.put(formState.image.name, formState.image.fileInfo);
       await API.graphql({
@@ -59,6 +89,16 @@ export default function CreatePost({
     }
   }
 
+  const Input = () => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        search(event.target.value)
+      }
+    }
+  
+    return <input type="text" onKeyDown={handleKeyDown} placeholder={locationString ?? "Location - type search and press enter"} />
+  }
+
   return (
     <div className={containerStyle}>
       <input
@@ -67,12 +107,12 @@ export default function CreatePost({
         className={inputStyle}
         onChange={onChangeText}
       />
-      <input
-        placeholder="Location"
-        name="location"
-        className={inputStyle}
-        onChange={onChangeText}
-      />
+      <Input />
+      <div>
+          {searchResults.map((result, index) => {
+            return <ul name="Location" onClick={() =>{setSearchResults([]); setLocationString(result.address.freeformAddress); setLatLong(`${result.position.lat},${result.position.lon}`)}} key={index}>{result.address.freeformAddress}</ul>
+          })}
+      </div>
       <input
         placeholder="Description"
         name="description"

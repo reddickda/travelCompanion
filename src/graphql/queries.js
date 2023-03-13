@@ -7,6 +7,7 @@ export const getPost = /* GraphQL */ `
       id
       name
       location
+      latLong
       description
       image
       owner
@@ -26,6 +27,7 @@ export const listPosts = /* GraphQL */ `
         id
         name
         location
+        latLong
         description
         image
         owner
