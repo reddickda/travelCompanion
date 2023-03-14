@@ -20,7 +20,6 @@ const buttonStyle = type => css`
   color: white;
   outline: none;
   border: none;
-  margin-top: 5px;
   cursor: pointer;
   :hover {
     background-color: #363636;

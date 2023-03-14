@@ -3,6 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import '@tomtom-international/web-sdk-maps/dist/maps.css'
 import tt from '@tomtom-international/web-sdk-maps';
 import './Map.css'
+import { css } from '@emotion/css';
+import Header from './Header';
+import Button from './Button';
+import CreatePost from './CreatePost';
 
 const MAX_ZOOM = 17;
 
@@ -16,6 +20,8 @@ export default function Map({posts = []
     const [mapZoom, setMapZoom] = useState(13);
 
     const [map, setMap] = useState({});
+    const [showOverlay, updateOverlayVisibility] = useState(false);
+
     useEffect(() => {
         let map = tt.map({
           key: process.env.REACT_APP_TOMTOMAPIKEY,
@@ -28,7 +34,6 @@ export default function Map({posts = []
             let lat = posts[index].latLong.split(",")[0]
             let long = posts[index].latLong.split(",")[1]
     
-            console.log(posts[index])
             setMap(map);
             let locationMarker = new tt.Marker({}).setLngLat([long, lat]).addTo(map);
     
@@ -46,6 +51,8 @@ export default function Map({posts = []
        
         return () => map.remove();
       }, [posts]);
+
+      
 
     //   useEffect(() => {
     //     console.log(posts)
@@ -72,8 +79,31 @@ export default function Map({posts = []
 
       
     return (
-        <div>
-            <div ref={mapElement} className="mapDiv"></div>
+      <>
+        <div className={contentStyle}>
+            <Header />
+            
+            <div ref={mapElement} className={mapStyle}></div>
         </div>
+         
+        </>
     )
   }
+
+  const contentStyle = css`
+`
+
+
+  // min-height: calc(100vh - 45px);
+const mapStyle = css`
+  width: 90vw;
+  height: 80vh;
+
+  @media screen and (max-height: 650px){
+    height: 60vh;
+  }
+
+  @media screen and (max-width: 500px){
+    width: 100vw;
+  }
+`

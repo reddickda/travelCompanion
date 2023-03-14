@@ -3,7 +3,8 @@
   }
   
   .mapDiv{
-    height: 500px;
+    width: 90vw;
+    height: 90vh;
   }
   
   .mapZoomDisplay {
@@ -15,3 +16,5 @@
   .updateButton {
     margin-top: 20px;
   }
+
+  

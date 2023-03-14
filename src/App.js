@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import {
   HashRouter,
   Routes,
-  Route
+  Route,
+  Navigate
 } from "react-router-dom";
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import { css } from '@emotion/css';
@@ -15,6 +16,7 @@ import Header from './Header';
 import CreatePost from './CreatePost';
 import Button from './Button';
 import Map from './Map';
+import NotFound from "./NotFound";
 
 
 function App() {
@@ -22,7 +24,6 @@ function App() {
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
-  
 
   async function signOut() {
     try {
@@ -55,20 +56,19 @@ function App() {
     updatePosts(postsArray);
   }
   return (
-    <>
+    <div className={wrapperDiv}>
       <HashRouter>
           <div className={contentStyle}>
-            <Header />
-            <hr className={dividerStyle} />
-            <Button title="New Post" onClick={() => updateOverlayVisibility(true)} />
             <Routes>
-              <Route exact path="/" element={<Posts posts={posts} />} />
+              <Route path="/" element={<Map posts={myPosts} />} />
               <Route path="/post/:id" element={<Post />} />
-              <Route exact path="/myposts" element={<Posts posts={myPosts} />} />
-              <Route exact path="/allPostsMap" element={<Map posts={posts} />}/>
+              {/* <Route exact path="/myposts" element={<Posts posts={myPosts} />} /> */}
+              {/* <Route exact path="/myPostsMap" element={<Posts posts={myPosts} />} /> */}
+              <Route path="/allPostsMap" element={<Map posts={posts} />}/>
+              <Route path='*' element={	<Navigate to="/" />}/>
             </Routes>
           </div>
-          <button type="button" onClick={() => signOut()}>Sign out</button>
+          <Button title="New Post" onClick={() => updateOverlayVisibility(true)} />
         </HashRouter>
         { showOverlay && (
           <CreatePost
@@ -77,17 +77,32 @@ function App() {
             posts={posts}
           />
         )}
-    </>
+    </div>
   );
 }
+const wrapperDiv = css`
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  outline: 1px solid red;
+`
 
-const dividerStyle = css`
-  margin-top: 15px;
+const buttonStyle = css`
+  display: flex;
+  @media screen and (max-width: 500px){
+    justify-content: center;
+  }
 `
 
 const contentStyle = css`
-  min-height: calc(100vh - 45px);
+height: 100%;
   padding: 0px 40px;
+  @media screen and (max-width: 500px) {
+    padding: 0px 0px;
+  }
+
 `
 
 export default withAuthenticator(App);

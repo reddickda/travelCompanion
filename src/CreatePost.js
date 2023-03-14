@@ -29,7 +29,7 @@ export default function CreatePost({
 
   async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
 
-    let baseUrl = 'https://api.tomtom.com/search/2/search/';
+    let baseUrl = 'https://api.tomtom.com/search/2/search';
 
     let queryString = `limit=${limit}&radius=${radius}&key=${process.env.REACT_APP_TOMTOMAPIKEY}`;
 
@@ -82,8 +82,6 @@ export default function CreatePost({
   /* 4. Save the post  */
   async function save() {
     try {
-      updateOverlayVisibility(false);
-
       const { name, description, image } = formState;
 
       if (!name || !description || !locationString || !latLong || !image.name) return;
@@ -175,7 +173,6 @@ const containerStyle = css`
   border-radius: 4px;
   top: 0;
   margin-left: calc(50vw - 220px);
-  margin-top: calc(50vh - 230px);
   background-color: white;
   border: 1px solid #ddd;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 0.125rem 0.25rem;

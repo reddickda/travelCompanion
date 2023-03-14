@@ -16,4 +16,13 @@ code {
   --amplify-primary-color: #006eff;
   --amplify-primary-tint: #005ed9;
   --amplify-primary-shade: #005ed9;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+html, #root, body, #app, #app>div {
+  height: 100%
 }
