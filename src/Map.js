@@ -15,15 +15,10 @@ export default function Map({posts = []
 
     const [mapZoom, setMapZoom] = useState(13);
 
-    // if(posts[0])
-    // {
-    //     setMapLatitude(posts[0].latLong.split(",")[0]);
-    //     setMapLongitude(posts[0].latLong.split(",")[1]);
-    // }
     const [map, setMap] = useState({});
     useEffect(() => {
         let map = tt.map({
-          key: "",
+          key: process.env.REACT_APP_TOMTOMAPIKEY,
           container: mapElement.current,
           center: [mapLongitude, mapLatitude],
           zoom: 3

@@ -4,7 +4,6 @@ import Button from './Button';
 import { v4 as uuid } from 'uuid';
 import { Storage, API, Auth } from 'aws-amplify';
 import { createPost } from './graphql/mutations';
-import ReactSearchBox from "react-search-box";
 import axios from 'axios';
 import { results } from './mockresponse';
 
@@ -32,9 +31,14 @@ export default function CreatePost({
 
     let baseUrl = 'https://api.tomtom.com/search/2/search/';
 
-    let queryString = `limit=${limit}&radius=${radius}&key=`;
+    let queryString = `limit=${limit}&radius=${radius}&key=${process.env.REACT_APP_TOMTOMAPIKEY}`;
 
-    let response = await axios.get(`${baseUrl}/${query}.json?${queryString}`);
+    let sanitizedQuery = query.replace(
+        /[^a-zA-Z\s]/g,
+        ""
+      )
+
+    let response = await axios.get(`${baseUrl}/${sanitizedQuery}.json?${queryString}`);
 
     return response.data.results;
 
@@ -54,13 +58,23 @@ export default function CreatePost({
   /* 2. onChangeText handler updates the form state when a user types into a form field */
   function onChangeText(e) {
     e.persist();
-    updateFormState(currentState => ({ ...currentState, [e.target.name]: e.target.value }));
+
+    let sanitizedText = e.target.value.replace(
+        /[^a-zA-Z\s]/g,
+        ""
+      )
+
+    updateFormState(currentState => ({ ...currentState, [e.target.name]: sanitizedText }));
   }
 
   /* 3. onChangeFile handler will be fired when a user uploads a file  */
   function onChangeFile(e) {
     e.persist();
-    if (! e.target.files[0]) return;
+    var fileName = e.target.files[0].name;
+    var idxDot = fileName.lastIndexOf(".") + 1;
+    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+    if (!e.target.files[0]) return; //|| extFile!="jpg" || extFile!="jpeg" || extFile!="png"
     const image = { fileInfo: e.target.files[0], name: `${e.target.files[0].name}_${uuid()}`}
     updateFormState(currentState => ({ ...currentState, file: URL.createObjectURL(e.target.files[0]), image }))
   }
@@ -68,8 +82,12 @@ export default function CreatePost({
   /* 4. Save the post  */
   async function save() {
     try {
+      updateOverlayVisibility(false);
+
       const { name, description, image } = formState;
+
       if (!name || !description || !locationString || !latLong || !image.name) return;
+
       updateFormState(currentState => ({ ...currentState, saving: true }));
       const postId = uuid();
       const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId };
@@ -122,6 +140,7 @@ export default function CreatePost({
       <input 
         type="file"
         onChange={onChangeFile}
+        accept="image/*"
       />
       { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> }
       <Button title="Create New Post" onClick={save} />
