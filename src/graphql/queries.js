@@ -16,6 +16,7 @@ export const batchGetUsers = /* GraphQL */ `
           location
           latLong
           description
+          username
           image
           owner
           createdAt
@@ -40,6 +41,7 @@ export const getPost = /* GraphQL */ `
       location
       latLong
       description
+      username
       image
       owner
       createdAt
@@ -60,6 +62,7 @@ export const listPosts = /* GraphQL */ `
         location
         latLong
         description
+        username
         image
         owner
         createdAt
@@ -69,17 +72,17 @@ export const listPosts = /* GraphQL */ `
     }
   }
 `;
-export const postsByOwnerAndName = /* GraphQL */ `
-  query PostsByOwnerAndName(
-    $owner: String!
+export const postsByUsernameAndName = /* GraphQL */ `
+  query PostsByUsernameAndName(
+    $username: String!
     $name: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelPostFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    postsByOwnerAndName(
-      owner: $owner
+    postsByUsernameAndName(
+      username: $username
       name: $name
       sortDirection: $sortDirection
       filter: $filter
@@ -92,6 +95,7 @@ export const postsByOwnerAndName = /* GraphQL */ `
         location
         latLong
         description
+        username
         image
         owner
         createdAt
@@ -116,6 +120,7 @@ export const getUser = /* GraphQL */ `
           location
           latLong
           description
+          username
           image
           owner
           createdAt

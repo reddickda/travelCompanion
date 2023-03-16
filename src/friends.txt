@@ -1,0 +1,15 @@
+// TODO adding friends
+// username added to incoming friend requests
+// show notifcation
+// accept friend request - add id to friends array
+// remove 
+
+// add a search for user somehow
+// get all users on load
+// have a search bar with them
+
+// friends will be
+// we have all users at the load
+// go through that array and find where username is inside our friends list
+// aggregate all of their posts
+// display

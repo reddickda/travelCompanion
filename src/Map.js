@@ -44,7 +44,7 @@ export default function Map({posts = []
             }
             
             var popup = new tt.Popup({ offset: popupOffsets })
-                .setHTML(`<div><p>${posts[index].description}<p/><p>${posts[index].location}<p/><img width="100px" height="100px" src="${posts[index].image}"/></div>`);
+                .setHTML(`<div><p>${posts[index].username}<p/><p>${posts[index].description}<p/><p>${posts[index].location}<p/><img width="50px" height="50px" src="${posts[index].image}"/></div>`);
                 locationMarker.setPopup(popup).togglePopup();
         })
        

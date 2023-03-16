@@ -33,6 +33,8 @@ function App() {
     /* query the API, ask for 100 items */
     let postData = await API.graphql({ query: listPosts, variables: { limit: 100 }});
     let postsArray = postData.data.listPosts.items;
+
+    // TODO error handling
     /* map over the image keys in the posts array, get signed image URLs for each image */
     postsArray = await Promise.all(postsArray.map(async post => {
       const imageKey = await Storage.get(post.image);
@@ -62,6 +64,7 @@ function App() {
     updateMyPosts(myPostData);
     updatePosts(postsArray);
     console.log(myPostData)
+
     var myDataNoDates = myPostData.map(post => {
       return {id: post.id, name:post.name, latLong: post.latLong, description: post.description, location:post.location, owner: post.owner, image: post.image}
     })
@@ -72,26 +75,15 @@ function App() {
     // TODO figure out
     // user has list of friends ids
     // get all the users from the ids provided in friends list
-    var currUser = await API.graphql({
-      query: getUser,
-      variables: {id: user.username},
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    })
-
-    var friends = await API.graphql({
-      query: batchGetUsers,
-      variables: {ids: ["buttons","test2_user"]}
-    })
 
     var fullInput = {id: "test2_user", posts:myDataNoDates}
-    console.log(friends)
+    console.log(userFromApi.data.friends)
     // await API.graphql({
     //   query: updateUser,
     //   variables: { input: {id:user.username, friends:{items:{ username: "buttons"}}} },
     //   authMode: 'AMAZON_COGNITO_USER_POOLS',
     // });
   }
-
 
   return (
     <div className={wrapperDiv}>

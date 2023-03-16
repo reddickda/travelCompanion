@@ -79,6 +79,30 @@ export default function CreatePost({
     updateFormState(currentState => ({ ...currentState, file: URL.createObjectURL(e.target.files[0]), image }))
   }
 
+//   query MyQuery {
+//     postsByUsernameAndName(username: "test2_user") {
+//       items {
+//         description
+//         name
+//         latLong
+//         location
+//         id
+//         image
+//         username
+//       }
+//     }
+//   }
+
+// TODO can only update logged in user
+// mutation update {
+//     updateUser(input: {id: "buttons", firstName: "farts"}, condition: {username: {eq: "buttons"}}) {
+//       id
+//       firstName
+//     }
+//   }
+  
+  
+
   /* 4. Save the post  */
   async function save() {
     try {
@@ -88,7 +112,9 @@ export default function CreatePost({
 
       updateFormState(currentState => ({ ...currentState, saving: true }));
       const postId = uuid();
-      const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId };
+      const { username } = await Auth.currentAuthenticatedUser(); // new
+
+      const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId, username};
   
       await Storage.put(formState.image.name, formState.image.fileInfo);
       await API.graphql({
@@ -96,7 +122,6 @@ export default function CreatePost({
         variables: { input: postInfo },
         authMode: 'AMAZON_COGNITO_USER_POOLS'
       }); // updated
-      const { username } = await Auth.currentAuthenticatedUser(); // new
       updatePosts([...posts, { ...postInfo, image: formState.file, owner: username }]); // updated
       updateFormState(currentState => ({ ...currentState, saving: false }));
       updateOverlayVisibility(false);
