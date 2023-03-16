@@ -14,9 +14,9 @@ export const createPost = /* GraphQL */ `
       description
       username
       image
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -33,9 +33,9 @@ export const updatePost = /* GraphQL */ `
       description
       username
       image
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -52,9 +52,9 @@ export const deletePost = /* GraphQL */ `
       description
       username
       image
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -78,9 +78,9 @@ export const createUser = /* GraphQL */ `
           description
           username
           image
-          owner
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -113,9 +113,9 @@ export const updateUser = /* GraphQL */ `
           description
           username
           image
-          owner
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -148,9 +148,9 @@ export const deleteUser = /* GraphQL */ `
           description
           username
           image
-          owner
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }

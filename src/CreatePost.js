@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { css } from '@emotion/css';
 import Button from './Button';
 import { v4 as uuid } from 'uuid';
-import { Storage, API, Auth } from 'aws-amplify';
-import { createPost } from './graphql/mutations';
-import axios from 'axios';
-import { results } from './mockresponse';
+import { Auth } from 'aws-amplify';
+import { getPlaces } from './utils';
+import { createApiPost } from './apiHelpers';
 
 /* Initial state to hold form input, saving state */
 const initialState = {
@@ -25,25 +24,6 @@ export default function CreatePost({
   const [searchResults, setSearchResults] = useState([]);
   const [locationString, setLocationString] = useState("");
   const [latLong, setLatLong] = useState("");
-
-
-  async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
-
-    let baseUrl = 'https://api.tomtom.com/search/2/search';
-
-    let queryString = `limit=${limit}&radius=${radius}&key=${process.env.REACT_APP_TOMTOMAPIKEY}`;
-
-    let sanitizedQuery = query.replace(
-        /[^a-zA-Z\s]/g,
-        ""
-      )
-
-    let response = await axios.get(`${baseUrl}/${sanitizedQuery}.json?${queryString}`);
-
-    return response.data.results;
-
-    // return results.results;
-}
 
 // TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
 // prevent bombing the search button
@@ -77,31 +57,7 @@ export default function CreatePost({
     if (!e.target.files[0]) return; //|| extFile!="jpg" || extFile!="jpeg" || extFile!="png"
     const image = { fileInfo: e.target.files[0], name: `${e.target.files[0].name}_${uuid()}`}
     updateFormState(currentState => ({ ...currentState, file: URL.createObjectURL(e.target.files[0]), image }))
-  }
-
-//   query MyQuery {
-//     postsByUsernameAndName(username: "test2_user") {
-//       items {
-//         description
-//         name
-//         latLong
-//         location
-//         id
-//         image
-//         username
-//       }
-//     }
-//   }
-
-// TODO can only update logged in user
-// mutation update {
-//     updateUser(input: {id: "buttons", firstName: "farts"}, condition: {username: {eq: "buttons"}}) {
-//       id
-//       firstName
-//     }
-//   }
-  
-  
+  }  
 
   /* 4. Save the post  */
   async function save() {
@@ -116,12 +72,8 @@ export default function CreatePost({
 
       const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId, username};
   
-      await Storage.put(formState.image.name, formState.image.fileInfo);
-      await API.graphql({
-        query: createPost,
-        variables: { input: postInfo },
-        authMode: 'AMAZON_COGNITO_USER_POOLS'
-      }); // updated
+      await createApiPost(postInfo, formState);
+
       updatePosts([...posts, { ...postInfo, image: formState.file, owner: username }]); // updated
       updateFormState(currentState => ({ ...currentState, saving: false }));
       updateOverlayVisibility(false);
@@ -130,7 +82,7 @@ export default function CreatePost({
     }
   }
 
-  const Input = () => {
+  const LocationSearch = () => {
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
         search(event.target.value)
@@ -148,10 +100,20 @@ export default function CreatePost({
         className={inputStyle}
         onChange={onChangeText}
       />
-      <Input />
+      <LocationSearch />
       <div>
           {searchResults.map((result, index) => {
-            return <ul name="Location" onClick={() =>{setSearchResults([]); setLocationString(result.address.freeformAddress); setLatLong(`${result.position.lat},${result.position.lon}`)}} key={index}>{result.address.freeformAddress}</ul>
+            return <ul 
+            name="Location" 
+            onClick={() =>
+              {
+                setSearchResults([]); 
+                setLocationString(result.address.freeformAddress); 
+                setLatLong(`${result.position.lat},${result.position.lon}`)
+              }} 
+              key={index}>
+                {result.address.freeformAddress}
+              </ul>
           })}
       </div>
       <input

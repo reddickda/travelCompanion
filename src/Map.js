@@ -42,10 +42,17 @@ export default function Map({posts = []
                 left: [25, -35],
                 right: [-25, -35]
             }
-            
-            var popup = new tt.Popup({ offset: popupOffsets })
-                .setHTML(`<div><p>${posts[index].username}<p/><p>${posts[index].description}<p/><p>${posts[index].location}<p/><img width="50px" height="50px" src="${posts[index].image}"/></div>`);
+
+            console.log(posts[index].image)
+            let div = document.createElement('div')
+            div.innerHTML = `<p>${posts[index].username}<p/><p>${posts[index].description}<p/><p>${posts[index].location}<p/><img width="50px" height="50px" src="${posts[index].image}"/>`
+            div.className = popupClass;
+
+            // var popup = new tt.Popup().setLngLat([long, lat])
+             var popup = new tt.Popup({ offset: popupOffsets }).setDOMContent(div);
+                // .setHTML(`<div><p>${posts[index].username}<p/><p>${posts[index].description}<p/><p>${posts[index].location}<p/><img width="50px" height="50px" src="${posts[index].image}"/></div>`);
                 locationMarker.setPopup(popup).togglePopup();
+                popup.addClassName("popupClass")
         })
        
         return () => map.remove();
@@ -92,6 +99,11 @@ export default function Map({posts = []
   const contentStyle = css`
 `
 
+const popupClass = css`
+  background-color: red;
+  max-width: 200px;
+  max-height:150px
+`
 
   // min-height: calc(100vh - 45px);
 const mapStyle = css`

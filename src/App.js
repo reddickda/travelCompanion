@@ -6,32 +6,30 @@ import {
   Navigate
 } from "react-router-dom";
 import { css } from '@emotion/css';
-import { API, Storage, Auth } from 'aws-amplify';
-import { listPosts, getUser, batchGetUsers } from './graphql/queries';
-import { createUser, updateUser } from './graphql/mutations';
+import { Storage, Auth } from 'aws-amplify';
 import { v4 as uuidv4 } from 'uuid';
-import Posts from './Posts';
 import Post from './Post';
-import Header from './Header';
 import CreatePost from './CreatePost';
 import Button from './Button';
 import Map from './Map';
-import NotFound from "./NotFound";
-import { Authenticator, withAuthenticator } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import { getAllPosts, createApiUser, getCurrentApiUser, getPostsByUsername } from "./apiHelpers";
 
 function App() {
   /* create a couple of pieces of initial state */
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
+  const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
 
   /* fetch posts when component loads */
   useEffect(() => {
-      fetchPosts();
+    fetchPostsAndSetPostState();
   }, []);
-  async function fetchPosts() {
+
+  async function fetchPostsAndSetPostState() {
     /* query the API, ask for 100 items */
-    let postData = await API.graphql({ query: listPosts, variables: { limit: 100 }});
+    let postData = await getAllPosts();
     let postsArray = postData.data.listPosts.items;
 
     // TODO error handling
@@ -42,47 +40,55 @@ function App() {
       return post;
     }));
     /* update the posts array in the local state */
-    setPostState(postsArray);
+    checkAndCreateUserAndSetPosts(postsArray);
   }
-  async function setPostState(postsArray) {
+
+  async function checkAndCreateUserAndSetPosts(postsArray) {
     const user = await Auth.currentAuthenticatedUser();
-    console.log(user)
-    let userFromApi = await API.graphql({ query: getUser, variables: { username: user.username, id: user.username }});
+    let userFromApi = await getCurrentApiUser(user.username);
+
     console.log({userFromApi})
-    if(!userFromApi.data.getUser) {
-      const userInfo = { firstName: user.attributes.given_name, lastName:user.attributes.family_name, username: user.username, email: user.attributes.email.toLowerCase(), id: user.username}; //id: uuidv4()
-      await API.graphql({
-        query: createUser,
-        variables: { input: userInfo },
-        authMode: 'AMAZON_COGNITO_USER_POOLS'
-      });
+
+    const userReturned = !userFromApi.data.getUser
+
+    if(userReturned) {
+      await createApiUser(user);
     }
 
+    console.log(userFromApi)
+    console.log({user})
+    // console.log({postsArray})
     // check if user exists
     // 
     const myPostData = postsArray.filter(p => p.owner === user.username);
+
+    // get friends posts
+    // var friendsPostsPromise = await getAllFriendsPosts(userFromApi.data.getUser.friends);
+
+    // var friendsPosts = friendsPostsPromise[0].data.postsByUsernameAndName.items;
+
+    console.log({postsArray})
+
+    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) === 0 )
+    console.log({friendsPostsArray})
+
     updateMyPosts(myPostData);
     updatePosts(postsArray);
-    console.log(myPostData)
+    updateMyFriendsPosts(friendsPostsArray)
 
-    var myDataNoDates = myPostData.map(post => {
-      return {id: post.id, name:post.name, latLong: post.latLong, description: post.description, location:post.location, owner: post.owner, image: post.image}
-    })
-
-
-    // this is all self referential
-    // need to reference other posts
-    // TODO figure out
-    // user has list of friends ids
-    // get all the users from the ids provided in friends list
-
-    var fullInput = {id: "test2_user", posts:myDataNoDates}
-    console.log(userFromApi.data.friends)
     // await API.graphql({
     //   query: updateUser,
     //   variables: { input: {id:user.username, friends:{items:{ username: "buttons"}}} },
     //   authMode: 'AMAZON_COGNITO_USER_POOLS',
     // });
+  }
+
+  async function getAllFriendsPosts(friends){
+    const promises = friends.map(async (friend) => {
+        return await getPostsByUsername(friend);
+    })
+
+    return Promise.all(promises);
   }
 
   return (
@@ -92,9 +98,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Map posts={myPosts} />} />
               <Route path="/post/:id" element={<Post />} />
-              {/* <Route exact path="/myposts" element={<Posts posts={myPosts} />} /> */}
-              {/* <Route exact path="/myPostsMap" element={<Posts posts={myPosts} />} /> */}
               <Route path="/allPostsMap" element={<Map posts={posts} />}/>
+              <Route path="/myFriendsPosts" element={<Map posts={myFriendsPosts} />}/>
               <Route path='*' element={	<Navigate to="/" />}/>
             </Routes>
           </div>
@@ -103,14 +108,13 @@ function App() {
         { showOverlay && (
           <CreatePost
             updateOverlayVisibility={updateOverlayVisibility}
-            updatePosts={setPostState}
+            updatePosts={fetchPostsAndSetPostState}
             posts={posts}
           />
         )}
     </div>
   )
 }
-
 
 const wrapperDiv = css`
   height: 100%;

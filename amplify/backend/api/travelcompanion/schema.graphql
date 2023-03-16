@@ -15,7 +15,6 @@ type Post @model
   description: String!
   username: String! @index(name: "byUser", sortKeyFields: ["name"])
   image: String
-  owner: String! 
 }
 
 type User @model

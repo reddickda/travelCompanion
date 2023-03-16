@@ -18,9 +18,9 @@ export const batchGetUsers = /* GraphQL */ `
           description
           username
           image
-          owner
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
@@ -43,9 +43,9 @@ export const getPost = /* GraphQL */ `
       description
       username
       image
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -64,9 +64,9 @@ export const listPosts = /* GraphQL */ `
         description
         username
         image
-        owner
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -97,9 +97,9 @@ export const postsByUsernameAndName = /* GraphQL */ `
         description
         username
         image
-        owner
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -122,9 +122,9 @@ export const getUser = /* GraphQL */ `
           description
           username
           image
-          owner
           createdAt
           updatedAt
+          owner
         }
         nextToken
       }
