@@ -20,6 +20,9 @@
       },
       "api": {
         "travelcompanion": {}
+      },
+      "custom": {
+        "BatchGetResolvers": {}
       }
     }
   }

@@ -55,3 +55,105 @@ export const deletePost = /* GraphQL */ `
     }
   }
 `;
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          image
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          image
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          image
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

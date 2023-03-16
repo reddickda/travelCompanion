@@ -60,6 +60,23 @@
       "service": "Cognito"
     }
   },
+  "custom": {
+    "BatchGetResolvers": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIKeyOutput",
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "travelcompanion"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "customCDK"
+    }
+  },
   "storage": {
     "images": {
       "dependsOn": [],

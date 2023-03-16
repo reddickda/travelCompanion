@@ -21,7 +21,6 @@ export default function Map({posts = []
 
     const [map, setMap] = useState({});
     const [showOverlay, updateOverlayVisibility] = useState(false);
-
     useEffect(() => {
         let map = tt.map({
           key: process.env.REACT_APP_TOMTOMAPIKEY,
