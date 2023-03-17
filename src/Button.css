@@ -12,7 +12,7 @@
     background-color: #058aff;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     .button-css {
         height: 20px;
         width: 100px;
