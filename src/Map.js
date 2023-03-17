@@ -18,7 +18,8 @@ const popupHtml = `
 
 export default function Map({
   posts = [],
-  updateOverlayVisibility
+  updateOverlayVisibility,
+  updateFriendsListVis
   }) {
     const mapElement = useRef();
     const [mapLongitude, setMapLongitude] = useState(-94)
@@ -90,7 +91,7 @@ export default function Map({
     return (
       <>
         <div>
-            <Header updateOverlayVisibility={updateOverlayVisibility}/>
+            <Header updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility}/>
             <div ref={mapElement} className={mapStyle}></div>
         </div>
      </>

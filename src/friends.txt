@@ -23,3 +23,8 @@
 
 // allow users to choose a profile color and store in post
 // allow users to choose a profile image and store in post?
+
+// fix tom tom search
+
+// disable opening multiple menus
+// once a menu is open make no other items clickable

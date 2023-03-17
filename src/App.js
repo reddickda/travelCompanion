@@ -19,6 +19,7 @@ function App() {
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
   const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
+  const [friendsListVis, updateFriendsListVis] = useState(false);
 
   /* fetch posts when component loads */
   useEffect(() => {
@@ -74,10 +75,10 @@ function App() {
       <HashRouter>
           <div className={contentStyle}>
             <Routes>
-              <Route path="/" element={<Map updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+              <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
               <Route path="/post/:id" element={<Post />} />
-              <Route path="/allPostsMap" element={<Map  updateOverlayVisibility={updateOverlayVisibility} posts={posts} />}/>
-              <Route path="/myFriendsPosts" element={<Map  updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />}/>
+              <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />}/>
+              <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />}/>
               <Route path='*' element={	<Navigate to="/" />}/>
             </Routes>
           </div>
@@ -90,6 +91,9 @@ function App() {
             posts={posts}
           />
         )}
+        {friendsListVis && <div className="friends-div">
+        <button onClick={() => updateFriendsListVis(false)}>Close</button> 
+    </div> }
     </div>
   )
 }

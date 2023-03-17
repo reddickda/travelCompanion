@@ -5,7 +5,7 @@ import {  Auth } from 'aws-amplify';
 import './Header.css';
 import './Button.css';
 
-export default function Header({updateOverlayVisibility}) {
+export default function Header({updateOverlayVisibility, updateFriendsListVis}) {
   const [loggedInUser, setLoggedInUser] = useState("");
 
   useEffect(() => {
@@ -23,18 +23,23 @@ export default function Header({updateOverlayVisibility}) {
   }
 
   return (
+    <>
     <div className={headerContainer}>
       <div className="header-container" >
         <h1 className={headerStyle}>TravelCompanion</h1>
         {loggedInUser && <UserComponent/>}
+      </div >
+      <div  className="header-container-lower">
         <button className="button-css" onClick={() => updateOverlayVisibility(true)}>New Post</button> 
+        <button className="button-css" onClick={() => updateFriendsListVis(true)}>Friends</button> 
       </div>
       <div className={linkDivStyle}>
         <Link to="/" className={"link-div"}>My Posts</Link>
         <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
         <Link to="/myFriendsPosts"  className={"link-div"}>Friends Posts</Link>
       </div>
-    </div>
+    </div>  
+    </>
   )
 }
 
@@ -42,6 +47,7 @@ const headerContainer = css`
 `
 
 const linkDivStyle = css`
+  margin-bottom: 5px;
   display: flex;
   @media screen and (max-width: 500px){
     justify-content: center;
