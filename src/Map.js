@@ -7,7 +7,6 @@ import { css } from '@emotion/css';
 import Header from './Header';
 import { getRandomColor } from './utils'
 
-const MAX_ZOOM = 17;
 const popupHtml = `
   <div class="popup">
     <h3 class="popup-title">{username}</h3>

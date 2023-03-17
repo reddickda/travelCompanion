@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
+export async function getPlaces(query, lat, long, limit = 6, radius = 10000) {
 
     let baseUrl = 'https://api.tomtom.com/search/2/search';
 

@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
 import { createApiPost, getCurrentApiUser } from './apiHelpers';
-
+import './CreatePost.css'
 /* Initial state to hold form input, saving state */
 const initialState = {
   name: '',
@@ -24,6 +24,7 @@ export default function CreatePost({
   const [searchResults, setSearchResults] = useState([]);
   const [locationString, setLocationString] = useState("");
   const [latLong, setLatLong] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false)
 
 // TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
 // prevent bombing the search button
@@ -100,40 +101,27 @@ export default function CreatePost({
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
         search(event.target.value)
+        setShowSearchResults(true)
       }
     }
   
-    return <input type="text" onKeyDown={handleKeyDown} placeholder={locationString ?? "Location - type search and press enter"} />
+    return <input className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={locationString.length === 0 ? "Search Location" : locationString} />
   }
 
   return (
-    <div className={containerStyle}>
+    <>
+    <div className="container-style">
       <input
         placeholder="Post name"
         name="name"
-        className={inputStyle}
+        className="input-style"
         onChange={onChangeText}
       />
       <LocationSearch />
-      <div>
-          {searchResults.map((result, index) => {
-            return <ul 
-            name="Location" 
-            onClick={() =>
-              {
-                setSearchResults([]); 
-                setLocationString(result.address.freeformAddress); 
-                setLatLong(`${result.position.lat},${result.position.lon}`)
-              }} 
-              key={index}>
-                {result.address.freeformAddress}
-              </ul>
-          })}
-      </div>
       <input
         placeholder="Description"
         name="description"
-        className={inputStyle}
+        className="input-style"
         onChange={onChangeText}
         maxLength="50"
       />
@@ -142,22 +130,34 @@ export default function CreatePost({
         onChange={onChangeFile}
         accept="image/*"
       />
-      { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> }
-      <Button title="Create New Post" onClick={save} />
-      <Button type="cancel" title="Cancel" onClick={() => updateOverlayVisibility(false)} />
+      {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
+      <button onClick={save}>Create New Post</button>
+      <button onClick={() => updateOverlayVisibility(false)}>Cancel</button>
       { formState.saving && <p className={savingMessageStyle}>Saving post...</p> }
     </div>
+    {showSearchResults && <><div class="overlay"><div className='search-results-style'><div className='scrollable-div'>{searchResults.map((result, index) => {
+          return <ul 
+          className='scrollable-ul'
+          name="Location" 
+          onClick={() =>
+            {
+              setShowSearchResults(false)
+              setSearchResults([]); 
+              setLocationString(result.address.freeformAddress); 
+              setLatLong(`${result.position.lat},${result.position.lon}`)
+            }} 
+            key={index}>
+              {result.address.freeformAddress}
+            </ul>
+            
+        })}
+        </div>
+        <button style={{backgroundColor: "", marginTop: 5}} onClick={() => setShowSearchResults(false)}>Cancel</button>
+        </div></div></>}
+        
+    </>
   )
 }
-
-const inputStyle = css`
-  margin-bottom: 10px;
-  outline: none;
-  padding: 7px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  border-radius: 4px;
-`
 
 const imageStyle = css`
   height: 120px;
@@ -165,21 +165,6 @@ const imageStyle = css`
   object-fit: contain;
 `
 
-const containerStyle = css`
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  height: 420px;
-  position: fixed;
-  left: 0;
-  border-radius: 4px;
-  top: 0;
-  margin-left: calc(50vw - 220px);
-  background-color: white;
-  border: 1px solid #ddd;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.125rem 0.25rem;
-  padding: 20px;
-`
 
 const savingMessageStyle = css`
   margin-bottom: 0px;
