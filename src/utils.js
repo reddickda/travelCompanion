@@ -15,3 +15,13 @@ export async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
 
     return response.data.results;
 }
+
+export function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    console.log(color)
+    return color;
+}

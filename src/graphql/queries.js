@@ -18,6 +18,8 @@ export const batchGetUsers = /* GraphQL */ `
           description
           username
           image
+          firstName
+          lastName
           createdAt
           updatedAt
           owner
@@ -43,6 +45,8 @@ export const getPost = /* GraphQL */ `
       description
       username
       image
+      firstName
+      lastName
       createdAt
       updatedAt
       owner
@@ -64,6 +68,8 @@ export const listPosts = /* GraphQL */ `
         description
         username
         image
+        firstName
+        lastName
         createdAt
         updatedAt
         owner
@@ -97,6 +103,8 @@ export const postsByUsernameAndName = /* GraphQL */ `
         description
         username
         image
+        firstName
+        lastName
         createdAt
         updatedAt
         owner
@@ -122,6 +130,8 @@ export const getUser = /* GraphQL */ `
           description
           username
           image
+          firstName
+          lastName
           createdAt
           updatedAt
           owner

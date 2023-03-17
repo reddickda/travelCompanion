@@ -4,7 +4,7 @@ import Button from './Button';
 import { v4 as uuid } from 'uuid';
 import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
-import { createApiPost } from './apiHelpers';
+import { createApiPost, getCurrentApiUser } from './apiHelpers';
 
 /* Initial state to hold form input, saving state */
 const initialState = {
@@ -63,14 +63,28 @@ export default function CreatePost({
   async function save() {
     try {
       const { name, description, image } = formState;
+      const { username } = await Auth.currentAuthenticatedUser(); // new
 
-      if (!name || !description || !locationString || !latLong || !image.name) return;
+      let userFromApi = await getCurrentApiUser(username);
+
+      let userInfo = userFromApi.data.getUser;
+
+      if (!name || !description || !locationString || !latLong || !image.name || !userInfo) return;
 
       updateFormState(currentState => ({ ...currentState, saving: true }));
       const postId = uuid();
-      const { username } = await Auth.currentAuthenticatedUser(); // new
 
-      const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId, username};
+      const postInfo = { 
+        name, 
+        description, 
+        latLong, 
+        location: locationString, 
+        image: formState.image.name, 
+        id: postId, 
+        username, 
+        firstName: userInfo.firstName, 
+        lastName: userInfo.lastName
+      };
   
       await createApiPost(postInfo, formState);
 
@@ -121,6 +135,7 @@ export default function CreatePost({
         name="description"
         className={inputStyle}
         onChange={onChangeText}
+        maxLength="50"
       />
       <input 
         type="file"

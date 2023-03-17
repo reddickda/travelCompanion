@@ -15,6 +15,9 @@ type Post @model
   description: String!
   username: String! @index(name: "byUser", sortKeyFields: ["name"])
   image: String
+  firstName: String
+  lastName: String
+  createdAt: AWSDateTime
 }
 
 type User @model

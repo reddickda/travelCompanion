@@ -64,3 +64,21 @@ export async function createApiPost (postInfo, formState) {
       authMode: 'AMAZON_COGNITO_USER_POOLS'
     });
 }
+
+export async function getPostsLastDay(){
+  const twentyFourHoursAgo = new Date(Date.now() - 86400000).toISOString();
+  const oneWeekAgo = new Date(Date.now() - 604800000).toISOString();  
+  const listInput = {
+    filter: {
+        createdAt: {
+          ge: oneWeekAgo
+        }
+      }
+  }
+
+return await API.graphql({
+    query: listPosts,
+    variables: {input: listInput},
+    authMode: 'AMAZON_COGNITO_USER_POOLS'
+})
+}

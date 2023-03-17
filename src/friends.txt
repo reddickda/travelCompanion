@@ -13,3 +13,13 @@
 // go through that array and find where username is inside our friends list
 // aggregate all of their posts
 // display
+
+// limit posts to 24 hours from posting
+// use chatgpt 
+
+// lookup tom tom traffic/requests
+// what kind of requests are happening
+    // look at the traffic and load site and see what goes up
+
+// allow users to choose a profile color and store in post
+// allow users to choose a profile image and store in post?

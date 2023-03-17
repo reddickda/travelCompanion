@@ -14,6 +14,8 @@ export const onCreatePost = /* GraphQL */ `
       description
       username
       image
+      firstName
+      lastName
       createdAt
       updatedAt
       owner
@@ -33,6 +35,8 @@ export const onUpdatePost = /* GraphQL */ `
       description
       username
       image
+      firstName
+      lastName
       createdAt
       updatedAt
       owner
@@ -52,6 +56,8 @@ export const onDeletePost = /* GraphQL */ `
       description
       username
       image
+      firstName
+      lastName
       createdAt
       updatedAt
       owner
@@ -78,6 +84,8 @@ export const onCreateUser = /* GraphQL */ `
           description
           username
           image
+          firstName
+          lastName
           createdAt
           updatedAt
           owner
@@ -113,6 +121,8 @@ export const onUpdateUser = /* GraphQL */ `
           description
           username
           image
+          firstName
+          lastName
           createdAt
           updatedAt
           owner
@@ -148,6 +158,8 @@ export const onDeleteUser = /* GraphQL */ `
           description
           username
           image
+          firstName
+          lastName
           createdAt
           updatedAt
           owner

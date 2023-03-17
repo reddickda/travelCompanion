@@ -7,13 +7,11 @@ import {
 } from "react-router-dom";
 import { css } from '@emotion/css';
 import { Storage, Auth } from 'aws-amplify';
-import { v4 as uuidv4 } from 'uuid';
 import Post from './Post';
-import CreatePost from './CreatePost';
-import Button from './Button';
 import Map from './Map';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import { getAllPosts, createApiUser, getCurrentApiUser, getPostsByUsername } from "./apiHelpers";
+import { getAllPosts, createApiUser, getCurrentApiUser, getPostsByUsername, getPostsLastDay } from "./apiHelpers";
+import CreatePost from "./CreatePost";
 
 function App() {
   /* create a couple of pieces of initial state */
@@ -27,9 +25,17 @@ function App() {
     fetchPostsAndSetPostState();
   }, []);
 
+  async function signOut() {
+    try {
+        await Auth.signOut();
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+}
+
   async function fetchPostsAndSetPostState() {
     /* query the API, ask for 100 items */
-    let postData = await getAllPosts();
+    let postData = await getPostsLastDay();
     let postsArray = postData.data.listPosts.items;
 
     // TODO error handling
@@ -47,27 +53,13 @@ function App() {
     const user = await Auth.currentAuthenticatedUser();
     let userFromApi = await getCurrentApiUser(user.username);
 
-    console.log({userFromApi})
-
     const userReturned = !userFromApi.data.getUser
 
     if(userReturned) {
       await createApiUser(user);
     }
 
-    console.log(userFromApi)
-    console.log({user})
-    // console.log({postsArray})
-    // check if user exists
-    // 
     const myPostData = postsArray.filter(p => p.owner === user.username);
-
-    // get friends posts
-    // var friendsPostsPromise = await getAllFriendsPosts(userFromApi.data.getUser.friends);
-
-    // var friendsPosts = friendsPostsPromise[0].data.postsByUsernameAndName.items;
-
-    console.log({postsArray})
 
     var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) === 0 )
     console.log({friendsPostsArray})
@@ -75,20 +67,6 @@ function App() {
     updateMyPosts(myPostData);
     updatePosts(postsArray);
     updateMyFriendsPosts(friendsPostsArray)
-
-    // await API.graphql({
-    //   query: updateUser,
-    //   variables: { input: {id:user.username, friends:{items:{ username: "buttons"}}} },
-    //   authMode: 'AMAZON_COGNITO_USER_POOLS',
-    // });
-  }
-
-  async function getAllFriendsPosts(friends){
-    const promises = friends.map(async (friend) => {
-        return await getPostsByUsername(friend);
-    })
-
-    return Promise.all(promises);
   }
 
   return (
@@ -96,15 +74,15 @@ function App() {
       <HashRouter>
           <div className={contentStyle}>
             <Routes>
-              <Route path="/" element={<Map posts={myPosts} />} />
+              <Route path="/" element={<Map updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
               <Route path="/post/:id" element={<Post />} />
-              <Route path="/allPostsMap" element={<Map posts={posts} />}/>
-              <Route path="/myFriendsPosts" element={<Map posts={myFriendsPosts} />}/>
+              <Route path="/allPostsMap" element={<Map  updateOverlayVisibility={updateOverlayVisibility} posts={posts} />}/>
+              <Route path="/myFriendsPosts" element={<Map  updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />}/>
               <Route path='*' element={	<Navigate to="/" />}/>
             </Routes>
           </div>
-          <Button title="New Post" onClick={() => updateOverlayVisibility(true)} />
         </HashRouter>
+        <button style={{height:40, width: 100}} type="button" onClick={() => signOut()}>Sign out</button>
         { showOverlay && (
           <CreatePost
             updateOverlayVisibility={updateOverlayVisibility}
