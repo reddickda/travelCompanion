@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { css } from '@emotion/css';
 import Button from './Button';
 import { v4 as uuid } from 'uuid';
-import { Storage, API, Auth } from 'aws-amplify';
-import { createPost } from './graphql/mutations';
-import axios from 'axios';
-import { results } from './mockresponse';
-
+import { Auth } from 'aws-amplify';
+import { getPlaces } from './utils';
+import { createApiPost, getCurrentApiUser } from './apiHelpers';
+import './CreatePost.css'
 /* Initial state to hold form input, saving state */
 const initialState = {
   name: '',
@@ -25,25 +24,7 @@ export default function CreatePost({
   const [searchResults, setSearchResults] = useState([]);
   const [locationString, setLocationString] = useState("");
   const [latLong, setLatLong] = useState("");
-
-
-  async function getPlaces(query, lat, long, limit = 3, radius = 10000) {
-
-    let baseUrl = 'https://api.tomtom.com/search/2/search';
-
-    let queryString = `limit=${limit}&radius=${radius}&key=${process.env.REACT_APP_TOMTOMAPIKEY}`;
-
-    let sanitizedQuery = query.replace(
-        /[^a-zA-Z\s]/g,
-        ""
-      )
-
-    let response = await axios.get(`${baseUrl}/${sanitizedQuery}.json?${queryString}`);
-
-    return response.data.results;
-
-    // return results.results;
-}
+  const [showSearchResults, setShowSearchResults] = useState(false)
 
 // TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
 // prevent bombing the search button
@@ -77,26 +58,37 @@ export default function CreatePost({
     if (!e.target.files[0]) return; //|| extFile!="jpg" || extFile!="jpeg" || extFile!="png"
     const image = { fileInfo: e.target.files[0], name: `${e.target.files[0].name}_${uuid()}`}
     updateFormState(currentState => ({ ...currentState, file: URL.createObjectURL(e.target.files[0]), image }))
-  }
+  }  
 
   /* 4. Save the post  */
   async function save() {
     try {
       const { name, description, image } = formState;
+      const { username } = await Auth.currentAuthenticatedUser(); // new
 
-      if (!name || !description || !locationString || !latLong || !image.name) return;
+      let userFromApi = await getCurrentApiUser(username);
+
+      let userInfo = userFromApi.data.getUser;
+
+      if (!name || !description || !locationString || !latLong || !image.name || !userInfo) return;
 
       updateFormState(currentState => ({ ...currentState, saving: true }));
       const postId = uuid();
-      const postInfo = { name, description, latLong, location: locationString, image: formState.image.name, id: postId };
+
+      const postInfo = { 
+        name, 
+        description, 
+        latLong, 
+        location: locationString, 
+        image: formState.image.name, 
+        id: postId, 
+        username, 
+        firstName: userInfo.firstName, 
+        lastName: userInfo.lastName
+      };
   
-      await Storage.put(formState.image.name, formState.image.fileInfo);
-      await API.graphql({
-        query: createPost,
-        variables: { input: postInfo },
-        authMode: 'AMAZON_COGNITO_USER_POOLS'
-      }); // updated
-      const { username } = await Auth.currentAuthenticatedUser(); // new
+      await createApiPost(postInfo, formState);
+
       updatePosts([...posts, { ...postInfo, image: formState.file, owner: username }]); // updated
       updateFormState(currentState => ({ ...currentState, saving: false }));
       updateOverlayVisibility(false);
@@ -105,57 +97,67 @@ export default function CreatePost({
     }
   }
 
-  const Input = () => {
+  const LocationSearch = () => {
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
         search(event.target.value)
+        setShowSearchResults(true)
       }
     }
   
-    return <input type="text" onKeyDown={handleKeyDown} placeholder={locationString ?? "Location - type search and press enter"} />
+    return <input className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={locationString.length === 0 ? "Search Location" : locationString} />
   }
 
   return (
-    <div className={containerStyle}>
+    <>
+    <div className="container-style">
       <input
         placeholder="Post name"
         name="name"
-        className={inputStyle}
+        className="input-style"
         onChange={onChangeText}
       />
-      <Input />
-      <div>
-          {searchResults.map((result, index) => {
-            return <ul name="Location" onClick={() =>{setSearchResults([]); setLocationString(result.address.freeformAddress); setLatLong(`${result.position.lat},${result.position.lon}`)}} key={index}>{result.address.freeformAddress}</ul>
-          })}
-      </div>
+      <LocationSearch />
       <input
         placeholder="Description"
         name="description"
-        className={inputStyle}
+        className="input-style"
         onChange={onChangeText}
+        maxLength="50"
       />
       <input 
         type="file"
         onChange={onChangeFile}
         accept="image/*"
       />
-      { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> }
-      <Button title="Create New Post" onClick={save} />
-      <Button type="cancel" title="Cancel" onClick={() => updateOverlayVisibility(false)} />
+      {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
+      <button onClick={save}>Create New Post</button>
+      <button onClick={() => updateOverlayVisibility(false)}>Cancel</button>
       { formState.saving && <p className={savingMessageStyle}>Saving post...</p> }
     </div>
+    {showSearchResults && <><div class="overlay"><div className='search-results-style'><div className='scrollable-div'>{searchResults.map((result, index) => {
+          return <ul 
+          className='scrollable-ul'
+          name="Location" 
+          onClick={() =>
+            {
+              setShowSearchResults(false)
+              setSearchResults([]); 
+              setLocationString(result.address.freeformAddress); 
+              setLatLong(`${result.position.lat},${result.position.lon}`)
+            }} 
+            key={index}>
+              {result.address.freeformAddress}
+            </ul>
+            
+        })}
+        </div>
+        <button style={{backgroundColor: "", marginTop: 5}} onClick={() => setShowSearchResults(false)}>Cancel</button>
+        </div></div></>}
+        
+    </>
   )
 }
-
-const inputStyle = css`
-  margin-bottom: 10px;
-  outline: none;
-  padding: 7px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  border-radius: 4px;
-`
 
 const imageStyle = css`
   height: 120px;
@@ -163,21 +165,6 @@ const imageStyle = css`
   object-fit: contain;
 `
 
-const containerStyle = css`
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  height: 420px;
-  position: fixed;
-  left: 0;
-  border-radius: 4px;
-  top: 0;
-  margin-left: calc(50vw - 220px);
-  background-color: white;
-  border: 1px solid #ddd;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.125rem 0.25rem;
-  padding: 20px;
-`
 
 const savingMessageStyle = css`
   margin-bottom: 0px;

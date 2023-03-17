@@ -13,6 +13,33 @@ type Post @model
   location: String!
   latLong: String!
   description: String!
+  username: String! @index(name: "byUser", sortKeyFields: ["name"])
   image: String
-  owner: String
+  firstName: String
+  lastName: String
+  createdAt: AWSDateTime
 }
+
+type User @model
+  @auth(rules: [
+      { allow: owner },
+      { allow: public, operations: [read] },
+      { allow: private, operations: [read] }
+    ]) {
+      firstName: String!
+      lastName: String!
+      username: String!
+      email: String!
+      friends: [String]
+      posts: [Post] @hasMany(indexName: "byUser", fields: ["username"])
+      incomingFriendRequests: [String]
+      outgoingFriendRequests: [String]
+}
+
+type Query {
+    batchGetUsers(ids: [String]): [User]
+}
+
+  # friends: [User] @hasMany(indexName: "byUser", fields: ["username"])
+      # posts: [Post] @hasMany(indexName: "byOwner", fields: ["username"])
+      # friendsPosts: [Post] @hasMany(indexName: "byOwner", fields: ["username"])

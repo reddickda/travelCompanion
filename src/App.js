@@ -5,25 +5,26 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
-import { withAuthenticator } from '@aws-amplify/ui-react';
 import { css } from '@emotion/css';
-import { API, Storage, Auth } from 'aws-amplify';
-import { listPosts } from './graphql/queries';
-
-import Posts from './Posts';
+import { Storage, Auth } from 'aws-amplify';
 import Post from './Post';
-import Header from './Header';
-import CreatePost from './CreatePost';
-import Button from './Button';
 import Map from './Map';
-import NotFound from "./NotFound";
-
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import { getAllPosts, createApiUser, getCurrentApiUser, getPostsByUsername, getPostsLastDay } from "./apiHelpers";
+import CreatePost from "./CreatePost";
 
 function App() {
   /* create a couple of pieces of initial state */
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
+  const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
+  const [friendsListVis, updateFriendsListVis] = useState(false);
+
+  /* fetch posts when component loads */
+  useEffect(() => {
+    fetchPostsAndSetPostState();
+  }, []);
 
   async function signOut() {
     try {
@@ -32,14 +33,13 @@ function App() {
         console.log('error signing out: ', error);
     }
 }
-  /* fetch posts when component loads */
-  useEffect(() => {
-      fetchPosts();
-  }, []);
-  async function fetchPosts() {
+
+  async function fetchPostsAndSetPostState() {
     /* query the API, ask for 100 items */
-    let postData = await API.graphql({ query: listPosts, variables: { limit: 100 }});
+    let postData = await getPostsLastDay();
     let postsArray = postData.data.listPosts.items;
+
+    // TODO error handling
     /* map over the image keys in the posts array, get signed image URLs for each image */
     postsArray = await Promise.all(postsArray.map(async post => {
       const imageKey = await Storage.get(post.image);
@@ -47,39 +47,57 @@ function App() {
       return post;
     }));
     /* update the posts array in the local state */
-    setPostState(postsArray);
+    checkAndCreateUserAndSetPosts(postsArray);
   }
-  async function setPostState(postsArray) {
+
+  async function checkAndCreateUserAndSetPosts(postsArray) {
     const user = await Auth.currentAuthenticatedUser();
+    let userFromApi = await getCurrentApiUser(user.username);
+
+    const userReturned = !userFromApi.data.getUser
+
+    if(userReturned) {
+      await createApiUser(user);
+    }
+
     const myPostData = postsArray.filter(p => p.owner === user.username);
+
+    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) === 0 )
+    console.log({friendsPostsArray})
+
     updateMyPosts(myPostData);
     updatePosts(postsArray);
+    updateMyFriendsPosts(friendsPostsArray)
   }
+
   return (
     <div className={wrapperDiv}>
       <HashRouter>
           <div className={contentStyle}>
             <Routes>
-              <Route path="/" element={<Map posts={myPosts} />} />
+              <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
               <Route path="/post/:id" element={<Post />} />
-              {/* <Route exact path="/myposts" element={<Posts posts={myPosts} />} /> */}
-              {/* <Route exact path="/myPostsMap" element={<Posts posts={myPosts} />} /> */}
-              <Route path="/allPostsMap" element={<Map posts={posts} />}/>
+              <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />}/>
+              <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />}/>
               <Route path='*' element={	<Navigate to="/" />}/>
             </Routes>
           </div>
-          <Button title="New Post" onClick={() => updateOverlayVisibility(true)} />
         </HashRouter>
+        <button style={{height:40, width: 100}} type="button" onClick={() => signOut()}>Sign out</button>
         { showOverlay && (
           <CreatePost
             updateOverlayVisibility={updateOverlayVisibility}
-            updatePosts={setPostState}
+            updatePosts={fetchPostsAndSetPostState}
             posts={posts}
           />
         )}
+        {friendsListVis && <div className="friends-div">
+        <button onClick={() => updateFriendsListVis(false)}>Close</button> 
+    </div> }
     </div>
-  );
+  )
 }
+
 const wrapperDiv = css`
   height: 100%;
   display: -webkit-flex;
@@ -102,7 +120,23 @@ height: 100%;
   @media screen and (max-width: 500px) {
     padding: 0px 0px;
   }
-
 `
+const services = {
+  async handleSignUp(formData) {
+    let { username, password, attributes } = formData;
+    // custom username
+    username = username.toLowerCase();
+    attributes.email = attributes.email.toLowerCase();
+    
+    return Auth.signUp({
+      username,
+      password,
+      attributes,
+      autoSignIn: {
+        enabled: true,
+      },
+    });
+  },
+};
 
-export default withAuthenticator(App);
+export default withAuthenticator(App, {services: services, signUpAttributes: ['given_name','family_name', 'email'] });

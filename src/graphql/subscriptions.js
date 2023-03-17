@@ -12,10 +12,13 @@ export const onCreatePost = /* GraphQL */ `
       location
       latLong
       description
+      username
       image
-      owner
+      firstName
+      lastName
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -30,10 +33,13 @@ export const onUpdatePost = /* GraphQL */ `
       location
       latLong
       description
+      username
       image
-      owner
+      firstName
+      lastName
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -48,10 +54,124 @@ export const onDeletePost = /* GraphQL */ `
       location
       latLong
       description
+      username
       image
-      owner
+      firstName
+      lastName
       createdAt
       updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onCreateUser(filter: $filter, owner: $owner) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          username
+          image
+          firstName
+          lastName
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onUpdateUser(filter: $filter, owner: $owner) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          username
+          image
+          firstName
+          lastName
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onDeleteUser(filter: $filter, owner: $owner) {
+      firstName
+      lastName
+      username
+      email
+      friends
+      posts {
+        items {
+          id
+          name
+          location
+          latLong
+          description
+          username
+          image
+          firstName
+          lastName
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      incomingFriendRequests
+      outgoingFriendRequests
+      id
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
