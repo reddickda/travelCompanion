@@ -32,7 +32,7 @@ export default function Header({updateOverlayVisibility}) {
       <div className={linkDivStyle}>
         <Link to="/" className={"link-div"}>My Posts</Link>
         <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
-        <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
+        <Link to="/myFriendsPosts"  className={"link-div"}>Friends Posts</Link>
       </div>
     </div>
   )
