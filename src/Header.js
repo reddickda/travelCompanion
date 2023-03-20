@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { css } from '@emotion/css';
 import { Link } from 'react-router-dom';
-import {  Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import './Header.css';
-import './Button.css';
 
-export default function Header({updateOverlayVisibility, updateFriendsListVis}) {
+export default function Header({ updateOverlayVisibility, updateFriendsListVis }) {
   const [loggedInUser, setLoggedInUser] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       const user = await Auth.currentAuthenticatedUser();
-      console.log(user.username)
       setLoggedInUser(user.username);
     }
     fetchData();
   }, []);
-  
+
 
   const UserComponent = () => {
     return <h3>Logged in as user: {loggedInUser}</h3>
@@ -24,21 +22,21 @@ export default function Header({updateOverlayVisibility, updateFriendsListVis}) 
 
   return (
     <>
-    <div className={headerContainer}>
-      <div className="header-container" >
-        <h1 className={headerStyle}>TravelCompanion</h1>
-        {loggedInUser && <UserComponent/>}
-      </div >
-      <div  className="header-container-lower">
-        <button className="button-css" onClick={() => updateOverlayVisibility(true)}>New Post</button> 
-        <button className="button-css" onClick={() => updateFriendsListVis(true)}>Friends</button> 
+      <div className={headerContainer}>
+        <div className="header-container" >
+          <h1 className={headerStyle}>TravelCompanion</h1>
+          {loggedInUser && <UserComponent />}
+        </div >
+        <div className="header-container-lower">
+          <button className="button-css" onClick={() => updateOverlayVisibility(true)}>New Post</button>
+          <button className="button-css" onClick={() => updateFriendsListVis(true)}>Friends</button>
+        </div>
+        <div className={linkDivStyle}>
+          <Link to="/" className={"link-div"}>My Posts</Link>
+          <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
+          <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
+        </div>
       </div>
-      <div className={linkDivStyle}>
-        <Link to="/" className={"link-div"}>My Posts</Link>
-        <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
-        <Link to="/myFriendsPosts"  className={"link-div"}>Friends Posts</Link>
-      </div>
-    </div>  
     </>
   )
 }

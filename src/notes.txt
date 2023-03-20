@@ -28,3 +28,5 @@
 
 // disable opening multiple menus
 // once a menu is open make no other items clickable
+
+// not show page until things are loaded
