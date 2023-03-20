@@ -6,7 +6,7 @@ export async function getAllPosts() {
   return await API.graphql({ query: listPosts, variables: { limit: 100 } });
 }
 
-export async function getAllUsers(){
+export async function getAllUsers() {
   return await API.graphql({ query: listUsers, variables: { limit: 100 } });
 }
 
@@ -53,6 +53,65 @@ export async function updateUserFriends(userId, listOfFriends, newFriend) {
     variables: { input: updateInput },
     authMode: 'AMAZON_COGNITO_USER_POOLS'
   })
+}
+
+export async function updateUserOutgoingFriends(userId, newFriend) {
+  let currentFriends = await getFriends(userId);
+  let currentFriendRequests = await getOutgoingFriendRequests(userId) ?? [];
+
+  if (!currentFriends.includes(newFriend) && !currentFriendRequests.includes(newFriend)) {
+
+    const updateInput = {
+      id: userId,
+      outgoingFriendRequests: [
+        ...currentFriendRequests,
+        newFriend
+      ]
+    }
+
+    async function getIncomingFriendRequests(newFriend){
+      const { data } = await API.graphql(
+        graphqlOperation(getUser, { id: newFriend })
+      );
+      return data.getUser.incomingFriendRequests ?? [];
+    }
+
+    const updateIncomingInput = {
+      id: newFriend,
+      incomingFriendRequests: [
+        ...(await getIncomingFriendRequests(newFriend)),
+        userId
+      ]
+    }
+    
+    await API.graphql({
+      query: updateUser,
+      variables: { input: updateIncomingInput },
+      authMode: 'AMAZON_COGNITO_USER_POOLS'
+    })
+
+    return await API.graphql({
+      query: updateUser,
+      variables: { input: updateInput },
+      authMode: 'AMAZON_COGNITO_USER_POOLS'
+    })
+  } else {
+    return "Friend already exists or request already sent"
+  }
+}
+
+async function getOutgoingFriendRequests(userId) {
+  const { data } = await API.graphql(
+    graphqlOperation(getUser, { id: userId })
+  );
+  return data.getUser.outgoingFriendRequests;
+}
+
+async function getFriends(userId) {
+  const { data } = await API.graphql(
+    graphqlOperation(getUser, { id: userId })
+  );
+  return data.getUser.friends;
 }
 
 export async function getPostsByUsername(username) {
