@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../CreatePost.css'
 import { updateUserOutgoingFriends } from "../apiHelpers"
+import { trySendFriendRequest } from "../helpers/apiSendFriendRequestHelpers"
 
 export default function AddFriendOverlayModal({ currentUser, onclick, username, showModal }) {
 
@@ -8,7 +9,7 @@ export default function AddFriendOverlayModal({ currentUser, onclick, username, 
         return null
 
     async function sendRequest(){
-        var result = await updateUserOutgoingFriends(currentUser, username)
+        var result = await trySendFriendRequest(currentUser, username)
         console.log(result)
     }
 

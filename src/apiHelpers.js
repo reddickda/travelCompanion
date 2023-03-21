@@ -20,7 +20,10 @@ export async function createApiUser(currentAuthenticatedUser) {
     lastName: currentAuthenticatedUser.attributes.family_name,
     username: currentAuthenticatedUser.username,
     email: currentAuthenticatedUser.attributes.email.toLowerCase(),
-    id: currentAuthenticatedUser.username
+    id: currentAuthenticatedUser.username,
+    friends: [],
+    incomingFriendRequests: [],
+    outgoingFriendRequests: []
   }; //id: uuidv4()
 
   return await API.graphql({

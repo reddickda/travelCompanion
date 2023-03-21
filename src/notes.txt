@@ -36,3 +36,5 @@
 //    friend request sent, friend or request already exists
 // show number of requests as little icon thing over requests button
 // need to add to incoming requests and handle the actual friend addition
+
+// USE SETS FOR FRIENDS LISTS

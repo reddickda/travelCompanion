@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
+import FriendsRequestOverlay from './components/FriendsRequestOverlay';
 
 import './CreatePost.css'
 
@@ -32,6 +33,7 @@ export default function FriendsList({
                 <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => updateOverlayVisibility(false)}>Cancel</button>
             </div>
             {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} />}
+            {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay incomingFriendRequests={incomingFriendRequests} friends={friends} showOverlay={setShowIncomingFriendRequestsOverlay} />}
             </div>
         </>
     )
