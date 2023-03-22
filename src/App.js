@@ -10,7 +10,7 @@ import { Storage, Auth } from 'aws-amplify';
 import Post from './Post';
 import Map from './Map';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import { getAllPosts, getUser, createApiUser, getCurrentApiUser, getPostsByUsername, getPostsLastDay } from "./apiHelpers";
+import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
@@ -25,7 +25,6 @@ function App() {
   const [myFriendsList, setMyFriendsList] = useState([]);
   const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
 
-  /* fetch posts when component loads */
   useEffect(() => {
     fetchPostsAndSetPostState();
   }, []);
@@ -65,7 +64,7 @@ function App() {
 
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
-    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) === 0)
+    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
 
     setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
     setMyFriendsList(loggedInUserFriendsData)
@@ -113,13 +112,6 @@ const wrapperDiv = css`
   -webkit-flex-direction: column;
   flex-direction: column;
   outline: 1px solid red;
-`
-
-const buttonStyle = css`
-  display: flex;
-  @media screen and (max-width: 500px){
-    justify-content: center;
-  }
 `
 
 const contentStyle = css`

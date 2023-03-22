@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getCurrentApiUser } from "../apiHelpers"
 import { tryAcceptFriendRequest } from "../helpers/apiAcceptFriendRequestHelper"
 import { Auth } from 'aws-amplify';
 import '../CreatePost.css'

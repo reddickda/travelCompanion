@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import '../CreatePost.css'
-import { updateUserOutgoingFriends } from "../apiHelpers"
 import { trySendFriendRequest } from "../helpers/apiSendFriendRequestHelpers"
 
 export default function AddFriendOverlayModal({ currentUser, onclick, username, showModal }) {

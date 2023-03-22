@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { v4 as uuid } from 'uuid';
 import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
-import { createApiPost, getCurrentApiUser } from './apiHelpers';
+import { createApiPost, getCurrentApiUser } from './helpers/apiHelpers';
 import './CreatePost.css'
 
 const initialState = {
@@ -50,9 +50,9 @@ export default function CreatePost({
   /* 3. onChangeFile handler will be fired when a user uploads a file  */
   function onChangeFile(e) {
     e.persist();
-    var fileName = e.target.files[0].name;
-    var idxDot = fileName.lastIndexOf(".") + 1;
-    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+    //var fileName = e.target.files[0].name;
+    //var idxDot = fileName.lastIndexOf(".") + 1;
+    //var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
 
     if (!e.target.files[0]) return; //|| extFile!="jpg" || extFile!="jpeg" || extFile!="png"
     const image = { fileInfo: e.target.files[0], name: `${e.target.files[0].name}_${uuid()}` }

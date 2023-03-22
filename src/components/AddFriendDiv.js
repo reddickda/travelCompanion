@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AddFriendDiv.css'
-import { getAllUsers } from '../apiHelpers'
-import { all } from 'axios';
+import { getAllUsers } from '../helpers/apiHelpers'
 import ScrollableFriendsListOverlay from './ScrollableFriendsListOverlay';
 import { Auth } from 'aws-amplify';
 import '../CreatePost.css'

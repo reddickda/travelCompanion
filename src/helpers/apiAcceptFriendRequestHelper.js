@@ -1,5 +1,4 @@
-import { API, graphqlOperation } from 'aws-amplify';
-import { getUser } from '../graphql/queries';
+import { API } from 'aws-amplify';
 import { updateUser } from '../graphql/mutations';
 import { getIncomingFriendRequests, getOutgoingFriendRequests, getFriendsById } from './apiSendFriendRequestHelpers';
 
