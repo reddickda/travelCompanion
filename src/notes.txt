@@ -2,8 +2,6 @@
 // what kind of requests are happening
     // look at the traffic and load site and see what goes up
 
-// allow users to choose a profile color and store in post
-// allow users to choose a profile image and store in post?
 
 // fix tom tom search
 
@@ -29,6 +27,8 @@ TODO:
 // use a react context/state management for global user data
 // filter posts by date
 // close all modals
+// allow users to choose a profile color and store in post
+// allow users to choose a profile image and store in post
 
 //Friend Notes: 
 // friends list displayed on click friend
