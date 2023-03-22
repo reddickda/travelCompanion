@@ -16,7 +16,6 @@ import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 
 function App() {
-  /* create a couple of pieces of initial state */
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
@@ -24,6 +23,7 @@ function App() {
   const [friendsListVis, updateFriendsListVis] = useState(false);
   const [myFriendsList, setMyFriendsList] = useState([]);
   const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
   useEffect(() => {
     fetchPostsAndSetPostState();
@@ -47,11 +47,13 @@ function App() {
     const user = await Auth.currentAuthenticatedUser();
     let userFromApi = await getCurrentApiUser(user.username);
 
+    // try catch here
     const userNotReturned = !userFromApi.data.getUser
 
     if (userNotReturned) {
       await createApiUser(user);
     }
+
 
     let loggedInUserFriends = userFromApi.data.getUser.friends;
 
@@ -65,7 +67,7 @@ function App() {
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
     var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
-
+    setCurrentLoggedInUser(user.username)
     setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
     setMyFriendsList(loggedInUserFriendsData)
     updateMyPosts(myPostData);
@@ -100,6 +102,7 @@ function App() {
           updateFriends={setMyFriendsList}
           friends={myFriendsList}
           incomingFriendRequests={myIncomingFriendRequests}
+          currentLoggedInUser={currentLoggedInUser}
         />}
     </div>
   )
