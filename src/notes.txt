@@ -29,6 +29,7 @@ TODO:
 // close all modals
 // allow users to choose a profile color and store in post
 // allow users to choose a profile image and store in post
+// center camera on a post on start and on click
 
 //Friend Notes: 
 // friends list displayed on click friend

@@ -23,6 +23,7 @@ function App() {
   const [friendsListVis, updateFriendsListVis] = useState(false);
   const [myFriendsList, setMyFriendsList] = useState([]);
   const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
   useEffect(() => {
     fetchPostsAndSetPostState();
@@ -53,6 +54,7 @@ function App() {
       await createApiUser(user);
     }
 
+
     let loggedInUserFriends = userFromApi.data.getUser.friends;
 
     var loggedInUserFriendsData = await Promise.all(loggedInUserFriends.map(async (friendId) => {
@@ -65,7 +67,7 @@ function App() {
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
     var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
-
+    setCurrentLoggedInUser(user.username)
     setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
     setMyFriendsList(loggedInUserFriendsData)
     updateMyPosts(myPostData);
@@ -100,6 +102,7 @@ function App() {
           updateFriends={setMyFriendsList}
           friends={myFriendsList}
           incomingFriendRequests={myIncomingFriendRequests}
+          currentLoggedInUser={currentLoggedInUser}
         />}
     </div>
   )

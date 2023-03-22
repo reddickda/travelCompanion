@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
 import FriendsRequestOverlay from './components/FriendsRequestOverlay';
-
+import FriendOverlay from './components/FriendOverlay';
 import './FriendsList.css'
 import './CreatePost.css'
 
 export default function FriendsList({
-    updateOverlayVisibility, updateFriends, friends, incomingFriendRequests
+    updateOverlayVisibility, currentLoggedInUser, friends, incomingFriendRequests
 }) {
     const [showAddFriendOverlay, setShowAddFriendOverlay] = useState(false);
     const [showIncomingFriendRequestsOverlay, setShowIncomingFriendRequestsOverlay] = useState(false);
+    const [showFriendOverlay, setShowFriendOverlay] = useState(false);
+    const [friendClicked, setFriendClicked] = useState(false);
+
 
     if (!friends)
         return <>Loading...</>;
@@ -21,7 +24,8 @@ export default function FriendsList({
                     className='scrollable-ul'
                     name="Location"
                     onClick={() => {
-                        console.log("clicked")
+                        setFriendClicked(result.username);
+                        setShowFriendOverlay(true)
                     }}
                     key={index}>
                     {result.username}
@@ -35,6 +39,7 @@ export default function FriendsList({
             </div>
             {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} />}
             {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay incomingFriendRequests={incomingFriendRequests} friends={friends} showOverlay={setShowIncomingFriendRequestsOverlay} />}
+            {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} username={friendClicked} currentLoggedInUser={currentLoggedInUser}/>}
             </div>
         </>
     )
