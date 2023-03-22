@@ -4,6 +4,7 @@ import { getAllUsers } from '../helpers/apiHelpers'
 import ScrollableFriendsListOverlay from './ScrollableFriendsListOverlay';
 import { Auth } from 'aws-amplify';
 import '../CreatePost.css'
+import './AddFriendDiv.css'
 
 export default function AddFriendDiv({ showOverlay }) {
     const [allCurrentUsers, setAllCurrentUsers] = useState([]);
@@ -47,7 +48,7 @@ export default function AddFriendDiv({ showOverlay }) {
     return (
         <div className="overlay">
             <div className='friends-div'>
-                <div>Adding Friend</div>
+                <h4>Adding Friend</h4>
                 <FriendSearch />
                 <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => showOverlay(false)}>Cancel</button>
             </div>

@@ -28,6 +28,7 @@ TODO:
 // post card updates
 // use a react context/state management for global user data
 // filter posts by date
+// close all modals
 
 //Friend Notes: 
 // friends list displayed on click friend

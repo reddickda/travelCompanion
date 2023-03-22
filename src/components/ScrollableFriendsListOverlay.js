@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AddFriendOverlayModal from "./AddFriendOverlayModal"
 import '../CreatePost.css'
+import './ScrollableFriendsListOverlay.css'
 
 export default function ScrollableFriendsListOverlay({ currentUser, onclick, data, setSearchResults }) {
     const [showAddFriendModal, setShowAddFriendModal] = useState(false)
@@ -12,7 +13,8 @@ export default function ScrollableFriendsListOverlay({ currentUser, onclick, dat
     return (
         <>
             <div className="overlay">
-                <div className='search-results-style'>
+                <div className='friends-div'>
+                    <h4>Users Returned:</h4>
                     <div className='scrollable-div'>{data.map((result, index) => {
                         return <ul
                             className='scrollable-ul'

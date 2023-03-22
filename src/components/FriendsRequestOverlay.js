@@ -25,10 +25,7 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
     // do a accept friend request api call
 
     async function acceptRequest(userId, newFriend){
-        console.log(newFriend)
-
         var result = await tryAcceptFriendRequest(userId, newFriend)
-         console.log(result)
     }
 
     return (

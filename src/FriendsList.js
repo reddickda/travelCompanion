@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
 import FriendsRequestOverlay from './components/FriendsRequestOverlay';
 
+import './FriendsList.css'
 import './CreatePost.css'
 
 export default function FriendsList({
@@ -15,7 +16,7 @@ export default function FriendsList({
 
     return (
         <>
-            <div className="overlay"><div className='friends-div'><div className='scrollable-div'>{friends.map((result, index) => {
+            <div className="overlay"><div className='friends-div'><h4>Friends:</h4><div className='scrollable-div'>{friends.map((result, index) => {
                 return <ul
                     className='scrollable-ul'
                     name="Location"
