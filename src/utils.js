@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Auth } from 'aws-amplify';
 
 export async function getPlaces(query, lat, long, limit = 6, radius = 10000) {
 
@@ -24,4 +25,12 @@ export function getRandomColor() {
     }
     console.log(color)
     return color;
+}
+
+export async function signOut() {
+  try {
+      await Auth.signOut();
+  } catch (error) {
+      console.log('error signing out: ', error);
+  }
 }

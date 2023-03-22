@@ -10,8 +10,10 @@ import { Storage, Auth } from 'aws-amplify';
 import Post from './Post';
 import Map from './Map';
 import { withAuthenticator } from '@aws-amplify/ui-react';
-import { getAllPosts, createApiUser, getCurrentApiUser, getPostsByUsername, getPostsLastDay } from "./apiHelpers";
+import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
+import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
+import FriendsList from "./FriendsList";
 
 function App() {
   /* create a couple of pieces of initial state */
@@ -20,33 +22,24 @@ function App() {
   const [myPosts, updateMyPosts] = useState([]);
   const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
   const [friendsListVis, updateFriendsListVis] = useState(false);
+  const [myFriendsList, setMyFriendsList] = useState([]);
+  const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
 
-  /* fetch posts when component loads */
   useEffect(() => {
     fetchPostsAndSetPostState();
   }, []);
 
-  async function signOut() {
-    try {
-        await Auth.signOut();
-    } catch (error) {
-        console.log('error signing out: ', error);
-    }
-}
-
   async function fetchPostsAndSetPostState() {
-    /* query the API, ask for 100 items */
     let postData = await getPostsLastDay();
     let postsArray = postData.data.listPosts.items;
 
-    // TODO error handling
     /* map over the image keys in the posts array, get signed image URLs for each image */
     postsArray = await Promise.all(postsArray.map(async post => {
       const imageKey = await Storage.get(post.image);
       post.image = imageKey;
       return post;
     }));
-    /* update the posts array in the local state */
+
     checkAndCreateUserAndSetPosts(postsArray);
   }
 
@@ -54,17 +47,27 @@ function App() {
     const user = await Auth.currentAuthenticatedUser();
     let userFromApi = await getCurrentApiUser(user.username);
 
-    const userReturned = !userFromApi.data.getUser
+    const userNotReturned = !userFromApi.data.getUser
 
-    if(userReturned) {
+    if (userNotReturned) {
       await createApiUser(user);
     }
 
+    let loggedInUserFriends = userFromApi.data.getUser.friends;
+
+    var loggedInUserFriendsData = await Promise.all(loggedInUserFriends.map(async (friendId) => {
+      const friendData = await getCurrentApiUser(friendId);
+      return friendData.data.getUser;
+    }))
+
+    let loggedInUserIncomingFriendRequests = userFromApi.data.getUser.incomingFriendRequests;
+
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
-    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) === 0 )
-    console.log({friendsPostsArray})
+    var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
 
+    setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
+    setMyFriendsList(loggedInUserFriendsData)
     updateMyPosts(myPostData);
     updatePosts(postsArray);
     updateMyFriendsPosts(friendsPostsArray)
@@ -73,27 +76,31 @@ function App() {
   return (
     <div className={wrapperDiv}>
       <HashRouter>
-          <div className={contentStyle}>
-            <Routes>
-              <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
-              <Route path="/post/:id" element={<Post />} />
-              <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />}/>
-              <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />}/>
-              <Route path='*' element={	<Navigate to="/" />}/>
-            </Routes>
-          </div>
-        </HashRouter>
-        <button style={{height:40, width: 100}} type="button" onClick={() => signOut()}>Sign out</button>
-        { showOverlay && (
-          <CreatePost
-            updateOverlayVisibility={updateOverlayVisibility}
-            updatePosts={fetchPostsAndSetPostState}
-            posts={posts}
-          />
-        )}
-        {friendsListVis && <div className="friends-div">
-        <button onClick={() => updateFriendsListVis(false)}>Close</button> 
-    </div> }
+        <div className={contentStyle}>
+          <Routes>
+            <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/post/:id" element={<Post />} />
+            <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
+            <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path='*' element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </HashRouter>
+      <button style={{ height: 40, width: 100 }} type="button" onClick={() => signOut()}>Sign out</button>
+      {showOverlay && (
+        <CreatePost
+          updateOverlayVisibility={updateOverlayVisibility}
+          updatePosts={fetchPostsAndSetPostState}
+          posts={posts}
+        />
+      )}
+      {friendsListVis &&
+        <FriendsList
+          updateOverlayVisibility={updateFriendsListVis}
+          updateFriends={setMyFriendsList}
+          friends={myFriendsList}
+          incomingFriendRequests={myIncomingFriendRequests}
+        />}
     </div>
   )
 }
@@ -105,13 +112,6 @@ const wrapperDiv = css`
   -webkit-flex-direction: column;
   flex-direction: column;
   outline: 1px solid red;
-`
-
-const buttonStyle = css`
-  display: flex;
-  @media screen and (max-width: 500px){
-    justify-content: center;
-  }
 `
 
 const contentStyle = css`
@@ -127,7 +127,7 @@ const services = {
     // custom username
     username = username.toLowerCase();
     attributes.email = attributes.email.toLowerCase();
-    
+
     return Auth.signUp({
       username,
       password,
@@ -139,4 +139,4 @@ const services = {
   },
 };
 
-export default withAuthenticator(App, {services: services, signUpAttributes: ['given_name','family_name', 'email'] });
+export default withAuthenticator(App, { services: services, signUpAttributes: ['given_name', 'family_name', 'email'] });

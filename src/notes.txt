@@ -1,0 +1,35 @@
+// lookup tom tom traffic/requests
+// what kind of requests are happening
+    // look at the traffic and load site and see what goes up
+
+// allow users to choose a profile color and store in post
+// allow users to choose a profile image and store in post?
+
+// fix tom tom search
+
+// disable opening multiple menus
+// once a menu is open make no other items clickable
+
+// not show page until things are loaded
+
+// added send friend request functionality
+// handle more in the ui ie:
+//    friend request sent, friend or request already exists
+// show number of requests as little icon thing over requests button
+// need to add to incoming requests and handle the actual friend addition
+
+TODO: 
+// friends workflow ui updates
+// remove friend functionality
+    // remove friend from logged in friends and other user
+// reject friend request
+    // remove from logged in incoming and other user outgoing
+
+//Friend Notes: 
+// friends list displayed on click friend
+    // lists friends - can choose add friend (AddFriendDiv) or friend requests (FriendsRequestOverlay)
+        //AddFriendDiv - ScrollableFriendsListOverlay and FriendSearch
+            // enter friend name and press enter for results in ScrollableFriendsListOverlay
+                // click on friend to add and AddFriendOverlayModal appears where you can send the request or cancel
+        // FriendsRequestOverlay - lists users who have sent request
+            // select user and choose to add or cancel

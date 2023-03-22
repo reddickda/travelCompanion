@@ -6,7 +6,7 @@ type Post @model
   @auth(rules: [
     { allow: owner },
     { allow: public, operations: [read] },
-    { allow: private, operations: [read] }
+    { allow: private, operations: [read, update] }
   ]) {
   id: ID!
   name: String!
@@ -22,9 +22,9 @@ type Post @model
 
 type User @model
   @auth(rules: [
+      { allow: private}
+      { allow: public},
       { allow: owner },
-      { allow: public, operations: [read] },
-      { allow: private, operations: [read] }
     ]) {
       firstName: String!
       lastName: String!
