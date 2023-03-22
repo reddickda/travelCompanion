@@ -53,7 +53,7 @@ export default function Map({
           const locationMarker = new tt.Marker( { element: createMarkerElement(initials.toLocaleUpperCase()) })
             .setLngLat([long, lat])
             .addTo(map)
-            .setPopup(new tt.Popup({ closeButton:false, offset: popupOffsets })
+            .setPopup(new tt.Popup({ closeButton:false, offset: popupOffsets, anchor: 'bottom'  })
               .setHTML(popupHtml.replace('{username}', currentPost.username)
                 .replace('{description}', currentPost.description)
                 .replace('{imageSource}', currentPost.image)

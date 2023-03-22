@@ -24,6 +24,10 @@ TODO:
     // remove friend from logged in friends and other user
 // reject friend request
     // remove from logged in incoming and other user outgoing
+// sign in ui updates
+// post card updates
+// use a react context/state management for global user data
+// filter posts by date
 
 //Friend Notes: 
 // friends list displayed on click friend

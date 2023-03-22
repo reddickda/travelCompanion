@@ -16,7 +16,6 @@ import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 
 function App() {
-  /* create a couple of pieces of initial state */
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
@@ -47,6 +46,7 @@ function App() {
     const user = await Auth.currentAuthenticatedUser();
     let userFromApi = await getCurrentApiUser(user.username);
 
+    // try catch here
     const userNotReturned = !userFromApi.data.getUser
 
     if (userNotReturned) {
