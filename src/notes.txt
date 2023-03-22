@@ -18,10 +18,7 @@
 
 TODO: 
 // friends workflow ui updates
-// remove friend functionality
-    // remove friend from logged in friends and other user
-// reject friend request
-    // remove from logged in incoming and other user outgoing
+// force refetch or subscriptions
 // sign in ui updates
 // post card updates
 // use a react context/state management for global user data
