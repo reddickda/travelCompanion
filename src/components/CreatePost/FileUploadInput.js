@@ -1,3 +1,5 @@
+import { Text } from "@aws-amplify/ui-react"
+
 export function FileUploadInput({ fileInputDiv, onChangeFile, fileUploaded}) {
 
     return(<><div style={fileInputDiv}>
@@ -10,6 +12,6 @@ export function FileUploadInput({ fileInputDiv, onChangeFile, fileUploaded}) {
         />
         <label style={{ color: 'white' }} for="img"><b>Upload Image</b></label>
       </div>
-      {fileUploaded && <div>Upload Success</div>}
+      {fileUploaded && <Text>Upload Success</Text>}
       </>)
 }

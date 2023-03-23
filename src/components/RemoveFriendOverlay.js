@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './AddFriendDiv.css'
-import { getAllUsers } from '../helpers/apiHelpers'
 import { tryRemoveFriend } from '../helpers/apiRemoveFriendHelper'
-import ScrollableFriendsListOverlay from './ScrollableFriendsListOverlay';
-import { Auth } from 'aws-amplify';
+import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
-export default function RemoveFriendOverlay({ showOverlay, username, currentLoggedInUser }) {
+export default function RemoveFriendOverlay({ showRemoveOverlay, username, currentLoggedInUser, showParentOverlay }) {
 
-    async function removeFriend(){
+    async function removeFriend() {
         await tryRemoveFriend(currentLoggedInUser, username)
-        showOverlay(false);
+        showRemoveOverlay(false);
+        showParentOverlay(false);
     }
 
     return (
         <div className="overlay">
-            <div className='friends-div'>
-                <h4>Are you sure?</h4>
-
-                <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => removeFriend()}>Yes</button>
-                <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => showOverlay(false)}>No</button>
-            </div>
+            <Card className='container-style'>
+                <Heading color='#d0d4d3' width='100%' level={6}>Are you sure?</Heading>
+                <Flex alignItems="flex-end" height="100%" justifyContent={"center"}>
+                    <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
+                        <Button variation="primary" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => removeFriend()}>Yes</Button>
+                        <Button variation="destructive" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => showRemoveOverlay(false)}>No</Button>
+                    </Grid>
+                </Flex>
+            </Card>
         </div>
     )
 }

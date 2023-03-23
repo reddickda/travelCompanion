@@ -5,7 +5,7 @@ import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
 import { createApiPost, getCurrentApiUser } from './helpers/apiHelpers';
 import {
-  Card, Flex, Button, Grid, TextField, SearchField
+  Card, Flex, Button, Grid, TextField, SearchField, Heading
 } from '@aws-amplify/ui-react';
 import './CreatePost.css'
 import { SearchResults } from './components/CreatePost/SearchResults';
@@ -31,8 +31,6 @@ export default function CreatePost({
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [fileLoaded, setFileLoaded] = useState(false);
 
-  // TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
-  // prevent bombing the search button
   async function search(query) {
     if (query.length > 0) {
 
@@ -41,7 +39,6 @@ export default function CreatePost({
     }
   }
 
-  /* 2. onChangeText handler updates the form state when a user types into a form field */
   function onChangeText(e) {
     e.persist();
 
@@ -53,7 +50,6 @@ export default function CreatePost({
     updateFormState(currentState => ({ ...currentState, [e.target.name]: sanitizedText }));
   }
 
-  /* 3. onChangeFile handler will be fired when a user uploads a file  */
   function onChangeFile(e) {
     e.persist();
     //var fileName = e.target.files[0].name;
@@ -122,38 +118,41 @@ export default function CreatePost({
 
   return (
     <>
-      <Card variation={"elevated"} className="container-style">
-        <Flex direction="column" wrap="nowrap">
-          <TextField
-            maxLength={30}
-            placeholder="Post name"
-            name="name"
-            size="small"
-            onChange={onChangeText}
-          />
-          <LocationSearch />
-          <TextField
-            placeholder="Description"
-            name="description"
-            onChange={onChangeText}
-            maxLength={50}
-            size="small"
-          />
-          <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile}/>
-          <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
-            {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
-            <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
-            <Button variation="destructive" height={"30px"} size={"small"} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
-          </Grid>
-          {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
-        </Flex>
-      </Card>
-      {showSearchResults && <SearchResults
-        searchResults={searchResults}
-        setLatLong={setLatLong}
-        setShowSearchResults={setShowSearchResults}
-        setSearchResults={setSearchResults}
-        setLocationString={setLocationString} />}
+      <div className="overlay">
+        <Card variation={"elevated"} className="container-style">
+          <Heading color='#d0d4d3' width='30vw' level={6}>Create Post</Heading>
+          <Flex direction="column" wrap="nowrap">
+            <TextField
+              maxLength={30}
+              placeholder="Post name"
+              name="name"
+              size="small"
+              onChange={onChangeText}
+            />
+            <LocationSearch />
+            <TextField
+              placeholder="Description"
+              name="description"
+              onChange={onChangeText}
+              maxLength={50}
+              size="small"
+            />
+            <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile} />
+            {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
+            <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
+              {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
+              <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
+              <Button variation="destructive" height={"30px"} size={"small"} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
+            </Grid>
+          </Flex>
+        </Card>
+        {showSearchResults && <SearchResults
+          searchResults={searchResults}
+          setLatLong={setLatLong}
+          setShowSearchResults={setShowSearchResults}
+          setSearchResults={setSearchResults}
+          setLocationString={setLocationString} />}
+      </div>
     </>
   )
 }

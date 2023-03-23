@@ -74,13 +74,12 @@
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 9999;
   }
-  
 
 @media (max-width: 500px) {
     .container-style {
         width: 200px;
         height: auto;
-        max-height: 300px;
+        max-height: 320px;
         top: 0;
         bottom: 0;
         left: 0;
