@@ -4,7 +4,12 @@ import { v4 as uuid } from 'uuid';
 import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
 import { createApiPost, getCurrentApiUser } from './helpers/apiHelpers';
+import {
+  Card, Flex, Button, Grid, TextField, SearchField, Heading
+} from '@aws-amplify/ui-react';
 import './CreatePost.css'
+import { SearchResults } from './components/CreatePost/SearchResults';
+import { FileUploadInput } from './components/CreatePost/FileUploadInput';
 
 const initialState = {
   name: '',
@@ -24,9 +29,8 @@ export default function CreatePost({
   const [locationString, setLocationString] = useState("");
   const [latLong, setLatLong] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false)
+  const [fileLoaded, setFileLoaded] = useState(false);
 
-  // TODO make a search bar with an enter button and only fire request then - limit to 5 results and they can choose
-  // prevent bombing the search button
   async function search(query) {
     if (query.length > 0) {
 
@@ -35,7 +39,6 @@ export default function CreatePost({
     }
   }
 
-  /* 2. onChangeText handler updates the form state when a user types into a form field */
   function onChangeText(e) {
     e.persist();
 
@@ -47,7 +50,6 @@ export default function CreatePost({
     updateFormState(currentState => ({ ...currentState, [e.target.name]: sanitizedText }));
   }
 
-  /* 3. onChangeFile handler will be fired when a user uploads a file  */
   function onChangeFile(e) {
     e.persist();
     //var fileName = e.target.files[0].name;
@@ -57,6 +59,7 @@ export default function CreatePost({
     if (!e.target.files[0]) return; //|| extFile!="jpg" || extFile!="jpeg" || extFile!="png"
     const image = { fileInfo: e.target.files[0], name: `${e.target.files[0].name}_${uuid()}` }
     updateFormState(currentState => ({ ...currentState, file: URL.createObjectURL(e.target.files[0]), image }))
+    setFileLoaded(true)
   }
 
   /* 4. Save the post  */
@@ -104,54 +107,52 @@ export default function CreatePost({
       }
     }
 
-    return <input className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={locationString.length === 0 ? "Search Location" : locationString} />
+    return <SearchField
+      size="small"
+      onKeyDown={handleKeyDown}
+      placeholder={locationString ? locationString : "Location"}
+      hasSearchButton={false}
+      descriptiveText="search"
+    />
   }
 
   return (
     <>
-      <div className="container-style">
-        <input
-          placeholder="Post name"
-          name="name"
-          className="input-style"
-          onChange={onChangeText}
-        />
-        <LocationSearch />
-        <input
-          placeholder="Description"
-          name="description"
-          className="input-style"
-          onChange={onChangeText}
-          maxLength="50"
-        />
-        <input
-          type="file"
-          onChange={onChangeFile}
-          accept="image/*"
-        />
-        {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
-        <button onClick={save}>Create New Post</button>
-        <button onClick={() => updateOverlayVisibility(false)}>Cancel</button>
-        {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
+      <div className="overlay">
+        <Card variation={"elevated"} className="container-style">
+          <Heading color='#d0d4d3' width='30vw' level={6}>Create Post</Heading>
+          <Flex direction="column" wrap="nowrap">
+            <TextField
+              maxLength={30}
+              placeholder="Post name"
+              name="name"
+              size="small"
+              onChange={onChangeText}
+            />
+            <LocationSearch />
+            <TextField
+              placeholder="Description"
+              name="description"
+              onChange={onChangeText}
+              maxLength={50}
+              size="small"
+            />
+            <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile} />
+            {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
+            <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
+              {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
+              <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
+              <Button variation="destructive" height={"30px"} size={"small"} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
+            </Grid>
+          </Flex>
+        </Card>
+        {showSearchResults && <SearchResults
+          searchResults={searchResults}
+          setLatLong={setLatLong}
+          setShowSearchResults={setShowSearchResults}
+          setSearchResults={setSearchResults}
+          setLocationString={setLocationString} />}
       </div>
-      {showSearchResults && <><div className="overlay"><div className='search-results-style'><div className='scrollable-div'>{searchResults.map((result, index) => {
-        return <ul
-          className='scrollable-ul'
-          name="Location"
-          onClick={() => {
-            setShowSearchResults(false)
-            setSearchResults([]);
-            setLocationString(result.address.freeformAddress);
-            setLatLong(`${result.position.lat},${result.position.lon}`)
-          }}
-          key={index}>
-          {result.address.freeformAddress}
-        </ul>
-
-      })}
-      </div>
-        <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => setShowSearchResults(false)}>Cancel</button>
-      </div></div></>}
     </>
   )
 }
@@ -159,3 +160,5 @@ export default function CreatePost({
 const savingMessageStyle = css`
   margin-bottom: 0px;
 `
+
+const fileInputDiv = { display: 'flex', justifyContent: 'center', backgroundColor: '#047d95', borderRadius: 5 }

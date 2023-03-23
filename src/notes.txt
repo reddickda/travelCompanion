@@ -19,7 +19,6 @@
 TODO: 
 // friends workflow ui updates
 // force refetch or subscriptions
-// sign in ui updates
 // post card updates
 // use a react context/state management for global user data
 // filter posts by date
@@ -27,6 +26,22 @@ TODO:
 // allow users to choose a profile color and store in post
 // allow users to choose a profile image and store in post
 // center camera on a post on start and on click
+// hide api keys and obscure things
+** // clean up styles and check on iphone from now on
+    // iphone is scrolling
+    // divs and inputs are out of linkStyle
+    // ** use amplify's library for responsiveness
+    // should help with modals and whatnot as well
+
+// finish replacing the rest of the friends workflow with amplify components
+    // friend requests
+    // accept friend requests
+// replace and restyle header
+// make work better on phone
+// minimuze requests sent
+// notificatios on friend request 
+// DONT open friend request model when one comes in
+// make search button work isntead of just enter
 
 //Friend Notes: 
 // friends list displayed on click friend
@@ -36,3 +51,5 @@ TODO:
                 // click on friend to add and AddFriendOverlayModal appears where you can send the request or cancel
         // FriendsRequestOverlay - lists users who have sent request
             // select user and choose to add or cancel
+
+// swapped tom tom for aws map

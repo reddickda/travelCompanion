@@ -6,14 +6,26 @@ import {
   Navigate
 } from "react-router-dom";
 import { css } from '@emotion/css';
-import { Storage, Auth } from 'aws-amplify';
+import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import Post from './Post';
 import Map from './Map';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { Heading, Authenticator, withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
+import AwsMap from "./AwsMap";
+import { onUpdateUser } from "./graphql/subscriptions";
+
+const components = {
+  Header() {
+    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>Travel Companion</Heading>
+  },
+  Footer() {
+    return <Heading backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
+  }
+}
 
 function App() {
   const [showOverlay, updateOverlayVisibility] = useState(false);
@@ -23,11 +35,33 @@ function App() {
   const [friendsListVis, updateFriendsListVis] = useState(false);
   const [myFriendsList, setMyFriendsList] = useState([]);
   const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
+  const [myOutgoingFriendRequests, setMyOutgoingFriendsRequests] = useState([]);
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
   useEffect(() => {
     fetchPostsAndSetPostState();
   }, []);
+
+  useEffect(() => {
+    if (currentLoggedInUser) {
+      const subscription = API.graphql(graphqlOperation(onUpdateUser, {
+        username: currentLoggedInUser
+      })).subscribe({
+        next: async ({ provider, value }) => {
+          let newFriendRequestCount = await getCurrentApiUser(currentLoggedInUser);
+          let allFriends = await Promise.all(newFriendRequestCount.data.getUser.friends.map(async (friendId) => {
+            const friendData = await getCurrentApiUser(friendId);
+            return friendData.data.getUser;
+          }))
+          setMyFriendsList(allFriends);
+          setMyIncomingFriendsRequests(newFriendRequestCount.data.getUser.incomingFriendRequests)
+          setMyOutgoingFriendsRequests(newFriendRequestCount.data.getUser.outgoingFriendRequests)
+        },
+        error: (error) => console.warn(error)
+      })
+      return () => subscription.unsubscribe();
+    }
+  })
 
   async function fetchPostsAndSetPostState() {
     let postData = await getPostsLastDay();
@@ -63,12 +97,14 @@ function App() {
     }))
 
     let loggedInUserIncomingFriendRequests = userFromApi.data.getUser.incomingFriendRequests;
+    let loggedInUserOutgoingFriendRequests = userFromApi.data.getUser.outgoingFriendRequests;
 
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
     var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
     setCurrentLoggedInUser(user.username)
     setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
+    setMyOutgoingFriendsRequests(loggedInUserOutgoingFriendRequests)
     setMyFriendsList(loggedInUserFriendsData)
     updateMyPosts(myPostData);
     updatePosts(postsArray);
@@ -80,10 +116,10 @@ function App() {
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
             <Route path="/post/:id" element={<Post />} />
-            <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
-            <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
+            <Route path="/myFriendsPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
@@ -103,6 +139,7 @@ function App() {
           friends={myFriendsList}
           incomingFriendRequests={myIncomingFriendRequests}
           currentLoggedInUser={currentLoggedInUser}
+          outgoingFriendRequests={myOutgoingFriendRequests}
         />}
     </div>
   )
@@ -142,4 +179,4 @@ const services = {
   },
 };
 
-export default withAuthenticator(App, { services: services, signUpAttributes: ['given_name', 'family_name', 'email'] });
+export default withAuthenticator(App, { components: components, services: services, signUpAttributes: ['given_name', 'family_name', 'email'] });

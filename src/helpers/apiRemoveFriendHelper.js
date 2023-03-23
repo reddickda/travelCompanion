@@ -3,8 +3,9 @@ import { API } from 'aws-amplify';
 import { updateUser } from '../graphql/mutations';
 import { getFriendsById } from './apiSendFriendRequestHelpers';
 
-export async function tryRemoveFriend(userId, friendUserId) {
-    let currentUserFriends = await getFriendsById(userId) ?? [];
+export async function tryRemoveFriend(userId, friendUserId, userFriends) {
+    let currentUserFriends = await getFriendsById(userId) ?? []; // can pass this
+    // let currentUserFriends = userFriends ?? [];
     let friendUserFriends = await getFriendsById(friendUserId) ?? [];
 
     // if friend to remove is in both lists

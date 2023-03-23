@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap');
+
+.container {
+  display: flex;
+}
+
+.maplibregl-popup-content, .mapboxgl-popup-content {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: none !important;
+  z-index: 5 !important;
+  max-width: 95% !important;
+  padding:0 !important;
+  
+}
+
+.maplibregl-popup-close-button, .mapboxgl-popup-close-button {
+  color: white !important;
+  font-size: 30px !important;
+  font-weight: bold;
+}
+
+.mapboxgl-popup-tip{
+    display:block !important;
+    border-top-color: #3b4b59 !important;
+}
+
+.circle{
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #1e90ff; */
+    /* border: 2px solid #fff; */
+    border-radius: 100%;
+}

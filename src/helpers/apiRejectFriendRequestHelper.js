@@ -2,8 +2,8 @@ import { API } from 'aws-amplify';
 import { updateUser } from '../graphql/mutations';
 import { getIncomingFriendRequests, getOutgoingFriendRequests } from './apiSendFriendRequestHelpers';
 
-export async function tryRejectFriendRequest(userId, newFriend) {
-    let currentIncomingFriendRequests = await getIncomingFriendRequests(userId) ?? [];
+export async function tryRejectFriendRequest(userId, newFriend, currentIncomingFriendRequests) {
+    // let currentIncomingFriendRequests = await getIncomingFriendRequests(userId) ?? []; // can pass this
     let newFriendOutgoingFriendRequests = await getOutgoingFriendRequests(newFriend) ?? [];
 
     if (currentIncomingFriendRequests.includes(newFriend)) {
