@@ -3,10 +3,10 @@ import { getUser } from '../graphql/queries';
 import { updateUser } from '../graphql/mutations';
 
 
-export async function trySendFriendRequest(userId, newFriend) {
+export async function trySendFriendRequest(userId, newFriend, currentFriends, currentOutgoingFriendRequests) {
     // get current user friends and outgoing friends lists
-    let currentFriends = await getFriendsById(userId) ?? [];
-    let currentOutgoingFriendRequests = await getOutgoingFriendRequests(userId) ?? [];
+    // let currentFriends = await getFriendsById(userId) ?? []; // can pass
+    // let currentOutgoingFriendRequests = await getOutgoingFriendRequests(userId) ?? []; // can pass
     let newFriendIncomingFriendRequests = await getIncomingFriendRequests(newFriend) ?? [];
 
     // if friend to add is not in either list, update outgoing
@@ -24,7 +24,7 @@ export async function trySendFriendRequest(userId, newFriend) {
         const updateIncomingInput = {
             id: newFriend,
             incomingFriendRequests: [
-                ...(await getIncomingFriendRequests(newFriend)),
+                ...newFriendIncomingFriendRequests,
                 userId
             ]
         }

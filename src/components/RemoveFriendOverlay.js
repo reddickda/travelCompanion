@@ -5,10 +5,10 @@ import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
-export default function RemoveFriendOverlay({ showRemoveOverlay, username, currentLoggedInUser, showParentOverlay }) {
+export default function RemoveFriendOverlay({ showRemoveOverlay, username, currentLoggedInUser, showParentOverlay, userFriends }) {
 
     async function removeFriend() {
-        await tryRemoveFriend(currentLoggedInUser, username)
+        await tryRemoveFriend(currentLoggedInUser, username, userFriends)
         showRemoveOverlay(false);
         showParentOverlay(false);
     }

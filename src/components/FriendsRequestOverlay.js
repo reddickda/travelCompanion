@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { tryAcceptFriendRequest } from "../helpers/apiAcceptFriendRequestHelper";
 import { tryRejectFriendRequest } from '../helpers/apiRejectFriendRequestHelper';
 import { Auth } from 'aws-amplify';
+import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
 import '../CreatePost.css'
 
 export default function FriendsRequestOverlay({ showOverlay, friends, incomingFriendRequests }) {
@@ -17,27 +18,22 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
         }
         fetchData();
     }, []);
-    if(incomingFriendRequests.length === 0 || !currentLoggedInUser) {
+    if (incomingFriendRequests.length === 0 || !currentLoggedInUser) {
         return null;
     }
-    
-    // get incoming friend requests
-    // list in the scrollable modal - with username tied as newusers to add
-    // onclick - popup for accept
-    // do a accept friend request api call
 
-    async function acceptRequest(userId, newFriend){
-        var result = await tryAcceptFriendRequest(userId, newFriend)
+    async function acceptRequest(userId, newFriend) {
+        var result = await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
     }
 
-    async function rejectRequest(userId, newFriend){
-        var result = await tryRejectFriendRequest(userId, newFriend)
+    async function rejectRequest(userId, newFriend) {
+        var result = await tryRejectFriendRequest(userId, newFriend, incomingFriendRequests)
     }
 
     return (
         <>
             <div className="overlay">
-                <div className='friends-div'>
+                <Card className='container-style'>
                     Friend Requests
                     <div className='scrollable-div'>{incomingFriendRequests.map((result, index) => {
                         return <ul
@@ -52,16 +48,19 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
                         </ul>
                     })}
                     </div>
-                    <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => showOverlay(false)}>Cancel</button>
-                </div>
-                {showRequest && <div style={{zIndex:10001}} className="overlay">
-                <div className='friends-div'>
-                    Accept Request from {userToAdd}?
-                    <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => {setShowRequest(false); acceptRequest( currentLoggedInUser, userToAdd);}}>Accept Request</button>
-                    <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => {setShowRequest(false); rejectRequest( currentLoggedInUser, userToAdd);}}>Reject Request</button>
-                    <button style={{ backgroundColor: "", marginTop: 5 }} onClick={() => setShowRequest(false)}>Cancel</button>
-                </div>
-            </div>}
+                    <Button size="small" height="30px" variation="destructive" style={{ marginTop: 5 }} onClick={() => showOverlay(false)}>Cancel</Button>
+                </Card>
+                {showRequest && <div style={{ zIndex: 10001 }} className="overlay">
+                    <Card className='container-style'>
+                        <Heading color='#d0d4d3' width='100%' level={6}>Accept Request from</Heading> 
+                        <Heading width='100%' level={5}>{userToAdd}</Heading>
+                        <Flex height="100%" direction="column" justifyContent={"flex-end"}>
+                            <Button variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept Request</Button>
+                            <Button variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject Request</Button>
+                            <Button variation="destructive" onClick={() => setShowRequest(false)}>Cancel</Button>
+                        </Flex>
+                    </Card>
+                </div>}
             </div>
         </>
     )

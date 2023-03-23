@@ -4,7 +4,7 @@ import { Card, Heading, Button, Grid } from '@aws-amplify/ui-react';
 import '../CreatePost.css'
 import './ScrollableFriendsListOverlay.css'
 
-export default function ScrollableFriendsListOverlay({ currentUser, onclick, data, setSearchResults }) {
+export default function ScrollableFriendsListOverlay({ currentUser, onclick, data, setSearchResults, friends, outgoingFriendRequests }) {
     const [showAddFriendModal, setShowAddFriendModal] = useState(false)
     const [userToAdd, setUserToAdd] = useState("")
 
@@ -32,7 +32,7 @@ export default function ScrollableFriendsListOverlay({ currentUser, onclick, dat
                 <Button variation='destructive' style={{ marginTop: 5 }} onClick={() => setSearchResults([])}>Cancel</Button>
                 </Card>
             </div>
-            {showAddFriendModal && <AddFriendOverlayModal currentUser={currentUser} showModal={setShowAddFriendModal} username={userToAdd} showParentSearchModal={setSearchResults}/>}
+            {showAddFriendModal && <AddFriendOverlayModal currentUser={currentUser} showModal={setShowAddFriendModal} username={userToAdd} showParentSearchModal={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends}/>}
         </>
     )
 }

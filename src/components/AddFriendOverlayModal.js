@@ -4,14 +4,14 @@ import './AddFriendOverlayModal.css'
 import { trySendFriendRequest } from "../helpers/apiSendFriendRequestHelpers"
 import { Card, Heading, Button, Grid, SearchField, Flex } from '@aws-amplify/ui-react';
 
-export default function AddFriendOverlayModal({ currentUser, onclick, username, showModal, showParentSearchModal }) {
+export default function AddFriendOverlayModal({ currentUser, onclick, username, showModal, showParentSearchModal, outgoingFriendRequests, friends }) {
 
     if (!username)
         return null
 
     async function sendRequest() {
-        var result = await trySendFriendRequest(currentUser, username)
-        console.log(result)
+        var result = await trySendFriendRequest(currentUser, username, friends, outgoingFriendRequests)
+        // console.log(result)
     }
 
     return (

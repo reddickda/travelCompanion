@@ -7,7 +7,7 @@ import { Card, Heading, Button, Grid, SearchField, Flex } from '@aws-amplify/ui-
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
-export default function AddFriendDiv({ showOverlay }) {
+export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, friends }) {
     const [allCurrentUsers, setAllCurrentUsers] = useState([]);
     const [searchResults, setSearchResults] = useState([])
     const [selectedUser, setSelectedUser] = useState("")
@@ -56,7 +56,7 @@ export default function AddFriendDiv({ showOverlay }) {
                     </div>
                 </Flex>
             </Card>
-            {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} />}
+            {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends}/>}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
 import FriendsRequestOverlay from './components/FriendsRequestOverlay';
 import FriendOverlay from './components/FriendOverlay';
@@ -7,17 +7,15 @@ import './FriendsList.css'
 import './CreatePost.css'
 
 export default function FriendsList({
-    updateOverlayVisibility, currentLoggedInUser, friends, incomingFriendRequests
+    updateOverlayVisibility, currentLoggedInUser, friends, incomingFriendRequests, outgoingFriendRequests
 }) {
     const [showAddFriendOverlay, setShowAddFriendOverlay] = useState(false);
     const [showIncomingFriendRequestsOverlay, setShowIncomingFriendRequestsOverlay] = useState(false);
     const [showFriendOverlay, setShowFriendOverlay] = useState(false);
     const [friendClicked, setFriendClicked] = useState(false);
 
-
     if (!friends)
         return <>Loading...</>;
-
     return (
         <>
             <div className="overlay">
@@ -37,12 +35,12 @@ export default function FriendsList({
                     })}
                     </div>
                     <Button size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowAddFriendOverlay(true)}>Add Friend</Button>
-                    <Button size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>Friend Requests</Button>
+                    <Button size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>{incomingFriendRequests.length} Friend Requests</Button>
                     <Button size="small" variation="destructive" style={{ marginTop: 5 }} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
                 </Card>
-                {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} />}
+                {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} friends={friends} outgoingFriendRequests={outgoingFriendRequests}/>}
                 {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay incomingFriendRequests={incomingFriendRequests} friends={friends} showOverlay={setShowIncomingFriendRequestsOverlay} />}
-                {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} username={friendClicked} currentLoggedInUser={currentLoggedInUser} />}
+                {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} username={friendClicked} currentLoggedInUser={currentLoggedInUser} userFriends={friends} />}
             </div>
         </>
     )

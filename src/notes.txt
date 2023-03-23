@@ -33,6 +33,16 @@ TODO:
     // ** use amplify's library for responsiveness
     // should help with modals and whatnot as well
 
+// finish replacing the rest of the friends workflow with amplify components
+    // friend requests
+    // accept friend requests
+// replace and restyle header
+// make work better on phone
+// minimuze requests sent
+// notificatios on friend request 
+// DONT open friend request model when one comes in
+// make search button work isntead of just enter
+
 //Friend Notes: 
 // friends list displayed on click friend
     // lists friends - can choose add friend (AddFriendDiv) or friend requests (FriendsRequestOverlay)

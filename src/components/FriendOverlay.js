@@ -6,7 +6,7 @@ import { Card, Heading, Button, Grid } from '@aws-amplify/ui-react';
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
-export default function FriendOverlay({ showOverlay, username, currentLoggedInUser }) {
+export default function FriendOverlay({ showOverlay, username, currentLoggedInUser, userFriends }) {
     const [showRemoveFriendOverlay, setShowRemoveFriendOverlay] = useState(false);
     const [friendRemoved, setFriendRemoved] = useState(false);
 
@@ -21,7 +21,7 @@ export default function FriendOverlay({ showOverlay, username, currentLoggedInUs
                 </Grid>
                 </div>
             </Card>
-            {showRemoveFriendOverlay && <RemoveFriendOverlay showRemoveOverlay={setShowRemoveFriendOverlay} username={username} currentLoggedInUser={currentLoggedInUser} showParentOverlay={showOverlay} />}
+            {showRemoveFriendOverlay && <RemoveFriendOverlay showRemoveOverlay={setShowRemoveFriendOverlay} username={username} currentLoggedInUser={currentLoggedInUser} showParentOverlay={showOverlay} userFriends={userFriends} />}
         </div>
     )
 }
