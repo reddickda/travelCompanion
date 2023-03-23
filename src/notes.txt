@@ -27,6 +27,7 @@ TODO:
 // allow users to choose a profile color and store in post
 // allow users to choose a profile image and store in post
 // center camera on a post on start and on click
+// hide api keys and obscure things
 
 //Friend Notes: 
 // friends list displayed on click friend
@@ -36,3 +37,5 @@ TODO:
                 // click on friend to add and AddFriendOverlayModal appears where you can send the request or cancel
         // FriendsRequestOverlay - lists users who have sent request
             // select user and choose to add or cancel
+
+// swapped tom tom for aws map

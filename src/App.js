@@ -9,11 +9,22 @@ import { css } from '@emotion/css';
 import { Storage, Auth } from 'aws-amplify';
 import Post from './Post';
 import Map from './Map';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { Heading, Authenticator,withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
+import AwsMap from "./AwsMap";
+
+const components = {
+  Header() {
+    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>Travel Companion</Heading>
+  },
+  Footer() {
+    return <Heading backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
+  }
+}
 
 function App() {
   const [showOverlay, updateOverlayVisibility] = useState(false);
@@ -80,10 +91,11 @@ function App() {
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
             <Route path="/post/:id" element={<Post />} />
-            <Route path="/allPostsMap" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
-            <Route path="/myFriendsPosts" element={<Map updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
+            <Route path="/myFriendsPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/awsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts}  />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
@@ -142,4 +154,4 @@ const services = {
   },
 };
 
-export default withAuthenticator(App, { services: services, signUpAttributes: ['given_name', 'family_name', 'email'] });
+export default withAuthenticator(App, { components:components, services: services, signUpAttributes: ['given_name', 'family_name', 'email'] });
