@@ -124,8 +124,9 @@ function App() {
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
-      </HashRouter>
       <Footer updateOverlayVisibility={updateOverlayVisibility} />
+
+      </HashRouter>
       {showOverlay && (
         <CreatePost
           updateOverlayVisibility={updateOverlayVisibility}

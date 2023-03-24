@@ -33,6 +33,10 @@ TODO:
 // redo modals again
 // add account page
 // allow people to see a single friends posts
+// Check what the classname is of the search bar ios mobile
+// add ability for comments...
+// look into dynamo update locking 
+// look into caching of responses
 
 // TODO - strange bug where friend object was added
 

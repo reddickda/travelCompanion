@@ -31,12 +31,6 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
               <MenuItem onClick={() => alert('calendar clicked')}>
                 See Posts From Date
               </MenuItem>
-              <MenuItem onClick={() => alert('my posts clicked')}>
-                <Link to="/myPosts">My Posts</Link>
-              </MenuItem>
-              <MenuItem onClick={() => alert('my posts clicked')}>
-                <Link to="/">Friends Posts</Link>
-              </MenuItem>
               <MenuItem onClick={() => alert('Account clicked')}>
                 Account
               </MenuItem>
