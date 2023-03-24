@@ -96,6 +96,10 @@
         padding: 20px;
   }
 
+  .amplify-icon {
+    color: #bcbec2
+  }
+
   @media (max-width: 2000px) {
     .header-container h1 {
         margin: 0;

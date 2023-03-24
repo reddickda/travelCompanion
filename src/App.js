@@ -157,10 +157,7 @@ const wrapperDiv = css`
 
 const contentStyle = css`
 height: 100%;
-  padding: 0px 40px;
-  @media screen and (max-width: 500px) {
-    padding: 0px 0px;
-  }
+  padding: 0px 0px;
 `
 const services = {
   async handleSignUp(formData) {

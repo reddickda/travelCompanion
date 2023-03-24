@@ -1,0 +1,16 @@
+.bottom-button {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+  
+  .bottom-button.fixed-above-search {
+    position: fixed;
+    bottom: auto;
+    top: 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

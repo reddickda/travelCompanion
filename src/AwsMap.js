@@ -6,8 +6,6 @@ import {
     Text,
     Card,
     Image,
-    useTheme,
-    Theme,
 } from '@aws-amplify/ui-react'
 import { useState } from 'react'
 import { Marker, Popup, useMap } from "react-map-gl"
@@ -52,7 +50,7 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                         style={{
                             boxShadow: '0px 2px 15px rgba(0, 0, 0, 1)'
                         }}
-                        onClick={() => {setGrowPopup(!growPopup)}}
+                        onClick={() => { setGrowPopup(!growPopup) }}
 
                     >
                         <Heading padding={5} color={'white'} level={5}>{username}</Heading>
@@ -83,7 +81,7 @@ function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
                         latitude: 47.615686,
                         zoom: 3,
                     }}
-                    style={{ width: '100%', height: 'calc(100vh - 200px)' }}
+                    style={{ width: '100%', height: '100vh' }}
                 >
                     {
                         posts.map((post, index) => {
@@ -94,14 +92,15 @@ function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
 
                             const initials = `${currentPost.firstName.charAt(0)}${currentPost.lastName.charAt(0)}`;
 
-                            return (<MarkerWithPopup
-                                username={currentPost.username}
-                                image={currentPost.image}
-                                description={currentPost.description}
-                                longitude={long}
-                                latitude={lat}
-                                key={index}
-                                initials={initials} />)
+                            return (
+                                <MarkerWithPopup
+                                    username={currentPost.username}
+                                    image={currentPost.image}
+                                    description={currentPost.description}
+                                    longitude={long}
+                                    latitude={lat}
+                                    key={index}
+                                    initials={initials} />)
                         })
                     }
 
