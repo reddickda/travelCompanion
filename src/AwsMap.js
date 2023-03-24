@@ -45,17 +45,19 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                     <Card
                         variation="elevated"
                         backgroundColor="#3b4b59"
+                        padding={0}
+                        maxWidth={150}
                     >
-                        <Heading color={'white'} level={5}>{username}</Heading>
-                        <Text color={'white'}>{description}</Text>
-                        <Flex justifyContent={'center'}>
+                        <Heading padding={5} color={'white'} level={5}>{username}</Heading>
+                        <Text style={{overflowX:'scroll'}} isTruncated={true}color={'white'}>{description}ajklsdkasjdhashjkdhafghajkdhkasjdhkjasdhkasdjkasdhjsdhjkashd</Text>
+                        {/* <Flex justifyContent={'center'}> */}
                             <Image
-                                objectFit={'contain'}
+                                objectFit={'fill'}
                                 width="150px"
                                 height="150px"
                                 src={image}
                             />
-                        </Flex>
+                        {/* </Flex> */}
                     </Card>
                 </Popup>
             )}
