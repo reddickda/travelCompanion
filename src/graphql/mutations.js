@@ -94,6 +94,7 @@ export const createUser = /* GraphQL */ `
       }
       incomingFriendRequests
       outgoingFriendRequests
+      color
       id
       createdAt
       updatedAt
@@ -131,6 +132,7 @@ export const updateUser = /* GraphQL */ `
       }
       incomingFriendRequests
       outgoingFriendRequests
+      color
       id
       createdAt
       updatedAt
@@ -168,6 +170,7 @@ export const deleteUser = /* GraphQL */ `
       }
       incomingFriendRequests
       outgoingFriendRequests
+      color
       id
       createdAt
       updatedAt

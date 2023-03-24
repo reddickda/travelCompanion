@@ -7,19 +7,21 @@ import {
     Card,
     Image,
     useTheme,
-    Theme
+    Theme,
 } from '@aws-amplify/ui-react'
 import { useState } from 'react'
-import { Marker, Popup } from "react-map-gl"
+import { Marker, Popup, useMap } from "react-map-gl"
 import './AwsMap.css';
 import Header from './Header'
 import { getRandomColor } from './utils'
 
-
 function MarkerWithPopup({ latitude, longitude, username, description, image, initials }) {
     const [showPopup, setShowPopup] = useState(false)
-    const { tokens } = useTheme();
+    const [growPopup, setGrowPopup] = useState(false);
+    const { current: map } = useMap();
+
     const handleMarkerClick = ({ originalEvent }) => {
+        map.flyTo({ center: [longitude, latitude], zoom: 5 })
         originalEvent.stopPropagation()
         setShowPopup(true)
     }
@@ -31,14 +33,14 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                 longitude={longitude}
                 onClick={handleMarkerClick}
             >
-                <div style={{backgroundColor: `${getRandomColor()}`}} className="circle"><h3>{initials.toLocaleUpperCase()}</h3></div>
-                </Marker>
+                <div style={{ backgroundColor: `${getRandomColor()}` }} className="circle"><h3>{initials.toLocaleUpperCase()}</h3></div>
+            </Marker>
             {showPopup && (
                 <Popup
                     latitude={latitude}
                     longitude={longitude}
                     offset={{ bottom: [0, -20] }}
-                    onClose={() => setShowPopup(false)}
+                    onClose={() => { setShowPopup(false); setGrowPopup(false) }}
                     maxWidth='95%'
                     anchor='bottom'
                 >
@@ -46,17 +48,22 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                         variation="elevated"
                         backgroundColor="#3b4b59"
                         padding={0}
-                        maxWidth={150}
+                        maxWidth={growPopup ? 250 : 150}
+                        style={{
+                            boxShadow: '0px 2px 15px rgba(0, 0, 0, 1)'
+                        }}
+                        onClick={() => {setGrowPopup(!growPopup)}}
+
                     >
                         <Heading padding={5} color={'white'} level={5}>{username}</Heading>
-                        <Text style={{overflowX:'scroll'}} isTruncated={true}color={'white'}>{description}ajklsdkasjdhashjkdhafghajkdhkasjdhkjasdhkasdjkasdhjsdhjkashd</Text>
+                        <Text style={{ overflowX: 'scroll' }} color={'white'}>{description}</Text>
                         {/* <Flex justifyContent={'center'}> */}
-                            <Image
-                                objectFit={'fill'}
-                                width="150px"
-                                height="150px"
-                                src={image}
-                            />
+                        <Image
+                            objectFit={'fill'}
+                            width={growPopup ? "250px" : 150}
+                            height={growPopup ? "250px" : 150}
+                            src={image}
+                        />
                         {/* </Flex> */}
                     </Card>
                 </Popup>
@@ -68,7 +75,7 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
 function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
     return (
         <View>
-            <Header updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility}/>
+            <Header updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
             <Flex direction={'column'} alignItems={'center'}>
                 <MapView
                     initialViewState={{
@@ -93,8 +100,8 @@ function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
                                 description={currentPost.description}
                                 longitude={long}
                                 latitude={lat}
-                                key={index} 
-                                initials={initials}/>)
+                                key={index}
+                                initials={initials} />)
                         })
                     }
 

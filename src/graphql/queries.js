@@ -28,6 +28,7 @@ export const batchGetUsers = /* GraphQL */ `
       }
       incomingFriendRequests
       outgoingFriendRequests
+      color
       id
       createdAt
       updatedAt
@@ -140,6 +141,7 @@ export const getUser = /* GraphQL */ `
       }
       incomingFriendRequests
       outgoingFriendRequests
+      color
       id
       createdAt
       updatedAt
@@ -165,6 +167,7 @@ export const listUsers = /* GraphQL */ `
         }
         incomingFriendRequests
         outgoingFriendRequests
+        color
         id
         createdAt
         updatedAt

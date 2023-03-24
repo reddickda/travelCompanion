@@ -20,7 +20,7 @@ TODO:
 // post card updates
 // use a react context/state management for global user data
 // filter posts by date
-// allow users to choose a profile color and store in post
+// allow users to choose a profile color and store in user, use this for circle
 // allow users to choose a profile image and store in post
 // center camera on a post on start and on click
 // hide api keys and obscure things
@@ -36,6 +36,10 @@ TODO:
 // DONT open friend request model when one comes in
 // make search button work isntead of just enter
 // make sure posts appear 
+// transition on grow
+// allow users to select on map where post is?
+
+// TODO - strange bug where friend object was added
 
 //Friend Notes: 
 // friends list displayed on click friend

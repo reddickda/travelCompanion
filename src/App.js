@@ -89,7 +89,6 @@ function App() {
       await createApiUser(user);
     }
 
-
     let loggedInUserFriends = userFromApi.data.getUser.friends;
 
     var loggedInUserFriendsData = await Promise.all(loggedInUserFriends.map(async (friendId) => {
@@ -118,8 +117,8 @@ function App() {
         <div className={contentStyle}>
           <Routes>
             <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
-            <Route path="/post/:id" element={<Post />} />
-            <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
+            {/* <Route path="/post/:id" element={<Post />} /> */}
+            {/* <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} /> */}
             <Route path="/myFriendsPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>

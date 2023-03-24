@@ -134,7 +134,7 @@ export default function CreatePost({
               placeholder="Description"
               name="description"
               onChange={onChangeText}
-              maxLength={50}
+              maxLength={30}
               size="small"
             />
             <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile} />

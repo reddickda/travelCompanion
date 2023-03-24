@@ -34,12 +34,9 @@ type User @model
       posts: [Post] @hasMany(indexName: "byUser", fields: ["username"])
       incomingFriendRequests: [String]
       outgoingFriendRequests: [String]
+      color: String
 }
 
 type Query {
     batchGetUsers(ids: [String]): [User]
 }
-
-  # friends: [User] @hasMany(indexName: "byUser", fields: ["username"])
-      # posts: [Post] @hasMany(indexName: "byOwner", fields: ["username"])
-      # friendsPosts: [Post] @hasMany(indexName: "byOwner", fields: ["username"])

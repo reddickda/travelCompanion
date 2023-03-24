@@ -42,6 +42,15 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
             }
         }
 
+        const handleSubmit = (event) => {
+            let returnedUsers = searchFriends(event.target.value)
+            if (returnedUsers.length === 1 && returnedUsers[0] === currentLoggedInUser) {
+                return null;
+            } else {
+                setSearchResults(returnedUsers);
+            }
+        }
+
         return <SearchField size="small" className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
     }
 
@@ -56,9 +65,9 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
                     </div>
                 </Flex>
             </Card>
-            {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends}/>}
+            {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends} />}
         </div>
     )
 }
 
-const buttonDivStyle = { display: "flex", alignItems: "flex-end", justifyContent:"flex-end", height: "100%" }
+const buttonDivStyle = { display: "flex", alignItems: "flex-end", justifyContent: "flex-end", height: "100%" }
