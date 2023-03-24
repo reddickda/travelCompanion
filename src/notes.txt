@@ -22,22 +22,17 @@ TODO:
 // filter posts by date
 // allow users to choose a profile color and store in user, use this for circle
 // allow users to choose a profile image and store in post
-// center camera on a post on start and on click
 // hide api keys and obscure things
-** // clean up styles and check on iphone from now on
-    // iphone is scrolling
-    // divs and inputs are out of linkStyle
-    // ** use amplify's library for responsiveness
-    // should help with modals and whatnot as well
 
-// replace and restyle header
-// make work better on phone
 // notificatios on friend request 
 // DONT open friend request model when one comes in
 // make search button work isntead of just enter
 // make sure posts appear 
 // transition on grow
 // allow users to select on map where post is?
+// redo modals again
+// add account page
+// allow people to see a single friends posts
 
 // TODO - strange bug where friend object was added
 

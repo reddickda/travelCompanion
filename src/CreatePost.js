@@ -119,7 +119,7 @@ export default function CreatePost({
   return (
     <>
       <div className="overlay">
-        <Card variation={"elevated"} className="container-style">
+        <Card padding={5}  variation={"elevated"} className="container-style">
           <Heading color='#d0d4d3' width='30vw' level={6}>Create Post</Heading>
           <Flex direction="column" wrap="nowrap">
             <TextField

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Auth } from 'aws-amplify';
 import { Button, Grid, Menu, Card, Heading, Flex, Text, MenuItem } from "@aws-amplify/ui-react"
 import { signOut } from "./utils";
+import { Link } from 'react-router-dom'
 import './Header.css';
 
 export default function Header({ updateOverlayVisibility, updateFriendsListVis }) {
@@ -18,7 +19,7 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
 
   return (
     <>
-      <Card variation={'elevated'} style={{ borderRadius: 0,backgroundColor:'#3f4343', position: 'fixed', top: 0, zIndex: 9999, width: '100%' }}>
+      <Card variation={'elevated'} style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', top: 0, zIndex: 9999, width: '100%' }}>
         {/* <Flex alignItems={'center'} justifyContent={'space-between'}> */}
         <Grid height={50} justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr 1fr 1fr"}>
           <Flex justifyContent={'flex-start'} paddingLeft={10}>
@@ -27,11 +28,20 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
           <Heading textAlign={'center'} justifyContent='center' color='#bcbec2' width='30vw' level={6}>App Name</Heading>
           <Flex paddingRight={10} justifyContent={'flex-end'} >
             <Menu menuAlign="end" >
+              <MenuItem onClick={() => alert('calendar clicked')}>
+                See Posts From Date
+              </MenuItem>
+              <MenuItem onClick={() => alert('my posts clicked')}>
+                <Link to="/myPosts">My Posts</Link>
+              </MenuItem>
+              <MenuItem onClick={() => alert('my posts clicked')}>
+                <Link to="/">Friends Posts</Link>
+              </MenuItem>
+              <MenuItem onClick={() => alert('Account clicked')}>
+                Account
+              </MenuItem>
               <MenuItem onClick={() => signOut()}>
                 Sign Out
-              </MenuItem>
-              <MenuItem onClick={() => alert('settings clicked')}>
-                Settings
               </MenuItem>
             </Menu>
           </Flex>
@@ -40,3 +50,9 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
     </>
   )
 }
+
+// <div className={linkDivStyle}>
+//   //       <Link to="/" className={"link-div"}>My Posts</Link>
+//   //       <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
+//   //       <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
+//   //     </div>

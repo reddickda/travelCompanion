@@ -117,10 +117,10 @@ function App() {
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/myPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
             {/* <Route path="/post/:id" element={<Post />} /> */}
             {/* <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} /> */}
-            <Route path="/myFriendsPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
