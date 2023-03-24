@@ -8,9 +8,8 @@ import {
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import Post from './Post';
-import Map from './Map';
 import '@aws-amplify/ui-react/styles.css';
-import { Heading, Authenticator, withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Heading, Button, withAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
@@ -61,6 +60,8 @@ function App() {
       })
       return () => subscription.unsubscribe();
     }
+
+
   })
 
   async function fetchPostsAndSetPostState() {
@@ -124,7 +125,6 @@ function App() {
           </Routes>
         </div>
       </HashRouter>
-      <button style={{ height: 40, width: 100 }} type="button" onClick={() => signOut()}>Sign out</button>
       {showOverlay && (
         <CreatePost
           updateOverlayVisibility={updateOverlayVisibility}

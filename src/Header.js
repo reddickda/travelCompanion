@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { css } from '@emotion/css';
 import { Link } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
+import { Button, Grid, Tabs } from "@aws-amplify/ui-react"
+import { signOut } from "./utils";
 import './Header.css';
 
 export default function Header({ updateOverlayVisibility, updateFriendsListVis }) {
@@ -22,21 +24,21 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
 
   return (
     <>
-      <div className={headerContainer}>
-        <div className="header-container" >
-          <h1 className={headerStyle}>TravelCompanion</h1>
-          {loggedInUser && <UserComponent />}
-        </div >
-        <div className="header-container-lower">
-          <button className="button-css" onClick={() => updateOverlayVisibility(true)}>New Post</button>
-          <button className="button-css" onClick={() => updateFriendsListVis(true)}>Friends</button>
-        </div>
-        <div className={linkDivStyle}>
-          <Link to="/" className={"link-div"}>My Posts</Link>
-          <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
-          <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
-        </div>
+      <div className="header-container" >
+        <h1 className={headerStyle}>TravelCompanion</h1>
+        {loggedInUser && <UserComponent />}
+      </div >
+      <div className="header-container-lower">
+        <Button onClick={() => updateOverlayVisibility(true)}>New Post</Button>
+        <Button onClick={() => updateFriendsListVis(true)}>Friends</Button>
+        <Button onClick={() => signOut()}>Sign out</Button>
       </div>
+      <div className={linkDivStyle}>
+        <Link to="/" className={"link-div"}>My Posts</Link>
+        <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
+        <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
+      </div>
+
     </>
   )
 }
@@ -47,6 +49,7 @@ const headerContainer = css`
 const linkDivStyle = css`
   margin-bottom: 5px;
   display: flex;
+  align-items: flex-end;
   @media screen and (max-width: 500px){
     justify-content: center;
   }

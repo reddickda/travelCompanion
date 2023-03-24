@@ -17,12 +17,9 @@
 // need to add to incoming requests and handle the actual friend addition
 
 TODO: 
-// friends workflow ui updates
-// force refetch or subscriptions
 // post card updates
 // use a react context/state management for global user data
 // filter posts by date
-// close all modals
 // allow users to choose a profile color and store in post
 // allow users to choose a profile image and store in post
 // center camera on a post on start and on click
@@ -33,15 +30,12 @@ TODO:
     // ** use amplify's library for responsiveness
     // should help with modals and whatnot as well
 
-// finish replacing the rest of the friends workflow with amplify components
-    // friend requests
-    // accept friend requests
 // replace and restyle header
 // make work better on phone
-// minimuze requests sent
 // notificatios on friend request 
 // DONT open friend request model when one comes in
 // make search button work isntead of just enter
+// make sure posts appear 
 
 //Friend Notes: 
 // friends list displayed on click friend
