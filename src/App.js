@@ -16,7 +16,8 @@ import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 import AwsMap from "./AwsMap";
 import { onUpdateUser } from "./graphql/subscriptions";
-
+import Footer  from "./Footer"
+ 
 const components = {
   Header() {
     return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>Travel Companion</Heading>
@@ -124,6 +125,7 @@ function App() {
           </Routes>
         </div>
       </HashRouter>
+      <Footer updateOverlayVisibility={updateOverlayVisibility} />
       {showOverlay && (
         <CreatePost
           updateOverlayVisibility={updateOverlayVisibility}

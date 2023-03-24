@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { css } from '@emotion/css';
 import { Link } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
-import { Button, Grid, Tabs } from "@aws-amplify/ui-react"
+import { Button, Grid, Menu, Card, Heading, Flex, Text, MenuItem } from "@aws-amplify/ui-react"
 import { signOut } from "./utils";
 import './Header.css';
 
@@ -21,26 +21,51 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
   const UserComponent = () => {
     return <h3>Logged in as user: {loggedInUser}</h3>
   }
-
   return (
     <>
-      <div className="header-container" >
-        <h1 className={headerStyle}>TravelCompanion</h1>
-        {loggedInUser && <UserComponent />}
-      </div >
-      <div className="header-container-lower">
-        <Button onClick={() => updateOverlayVisibility(true)}>New Post</Button>
-        <Button onClick={() => updateFriendsListVis(true)}>Friends</Button>
-        <Button onClick={() => signOut()}>Sign out</Button>
-      </div>
-      <div className={linkDivStyle}>
-        <Link to="/" className={"link-div"}>My Posts</Link>
-        {/* <Link to="/allPostsMap" className={"link-div"}>All Posts</Link> */}
-        <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
-      </div>
+      <Card>
+        {/* <Flex alignItems={'center'} justifyContent={'space-between'}> */}
+        <Grid justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr 1fr 1fr"}>
+          <Flex justifyContent={'flex-start'} >
+            <Button onClick={() => updateFriendsListVis(true)}>Friends</Button>
+          </Flex>
+          <Heading textAlign={'center'} justifyContent='center' color='#323535' width='30vw' level={6}>App Name</Heading>
+          <Flex justifyContent={'flex-end'} >
+            <Menu menuAlign="end" >
+              <MenuItem onClick={() => signOut()}>
+               Sign Out
+              </MenuItem>
+              <MenuItem onClick={() => alert('settings clicked')}>
+               Settings
+              </MenuItem>
+            </Menu>
+          </Flex>
+        </Grid>
+        {/* </Flex> */}
 
+      </Card>
     </>
   )
+
+  // return (
+  //   <>
+  //     <div className="header-container" >
+  //       <h1 className={headerStyle}>TravelCompanion</h1>
+  //       {loggedInUser && <UserComponent />}
+  //     </div >
+  //     <div className="header-container-lower">
+  //       <Button onClick={() => updateOverlayVisibility(true)}>New Post</Button>
+  //       <Button onClick={() => updateFriendsListVis(true)}>Friends</Button>
+  //       <Button onClick={() => signOut()}>Sign out</Button>
+  //     </div>
+  //     <div className={linkDivStyle}>
+  //       <Link to="/" className={"link-div"}>My Posts</Link>
+  //       <Link to="/allPostsMap" className={"link-div"}>All Posts</Link>
+  //       <Link to="/myFriendsPosts" className={"link-div"}>Friends Posts</Link>
+  //     </div>
+
+  //   </>
+  // )
 }
 
 const headerContainer = css`

@@ -83,7 +83,7 @@ function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
                         latitude: 47.615686,
                         zoom: 3,
                     }}
-                    style={{ width: '100%', height: 'calc(100vh - 300px)' }}
+                    style={{ width: '100%', height: 'calc(100vh - 200px)' }}
                 >
                     {
                         posts.map((post, index) => {
