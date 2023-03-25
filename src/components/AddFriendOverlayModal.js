@@ -10,6 +10,13 @@ export default function AddFriendOverlayModal({ currentUser, onclick, username, 
 
     async function sendRequest() {
         var result = await trySendFriendRequest(currentUser, username, friends, outgoingFriendRequests)
+        if(result === "Friend already exists or request already sent")
+        {
+            alert("Friend already exists or request already sent")
+        }
+        else{
+            alert("Friend request sent")
+        }
         // console.log(result)
     }
 

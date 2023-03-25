@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Grid, Card, Flex } from "@aws-amplify/ui-react"
 import { Link } from 'react-router-dom'
 import './Header.css';
+import { AiOutlinePlus} from "react-icons/ai"
 
 export default function Footer({ updateOverlayVisibility, updateFriendsListVis }) {
     const [buttonBottom, setButtonBottom] = useState(20);
@@ -31,13 +32,13 @@ export default function Footer({ updateOverlayVisibility, updateFriendsListVis }
         <Card style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', left: 0, right: 0, margin: 'auto', bottom: 0, zIndex: 999 }}>
             <Grid height={60} justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr 1fr 1fr"}>
                 <Flex justifyContent={'flex-start'} paddingLeft={10}>
-                    <Link className="link-div" to="/">Friends Posts</Link>
+                    <Button height={40} size="small"><Link style={linkStyle} to="/">Friends Posts</Link></Button>
                 </Flex>
                 <Flex justifyContent={'center'}>
-                    <Button variation="primary" onClick={() => updateOverlayVisibility(true)}>New Post</Button>
+                    <Button height={40} onClick={() => updateOverlayVisibility(true)}><AiOutlinePlus color="#bcbec2" /></Button>
                 </Flex>
-                <Flex justifyContent={'flex-end'}>
-                    <Link className="link-div" to="/myPosts">My Posts</Link>
+                <Flex justifyContent={'flex-end'} paddingRight={10}>
+                    <Button height={40} size="small"><Link style={linkStyle} to="/myPosts">My Posts</Link></Button>
                 </Flex>
             </Grid>
         </Card>
@@ -45,4 +46,6 @@ export default function Footer({ updateOverlayVisibility, updateFriendsListVis }
     )
 
 }
+
+const linkStyle = { textDecoration: 'none', color: '#bcbec2', fontSize: "12px" }
 // style={{ position: 'fixed', left: 0, right: 0, margin: 'auto', bottom: 0, zIndex: 999 }}
