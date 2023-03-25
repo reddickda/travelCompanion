@@ -7,11 +7,9 @@ import {
 } from "react-router-dom";
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
-import Post from './Post';
 import '@aws-amplify/ui-react/styles.css';
 import { Heading, Button, withAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
-import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 import AwsMap from "./AwsMap";
@@ -20,7 +18,7 @@ import Footer  from "./Footer"
  
 const components = {
   Header() {
-    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>Travel Companion</Heading>
+    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>App Name</Heading>
   },
   Footer() {
     return <Heading backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
