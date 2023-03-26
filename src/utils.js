@@ -26,9 +26,10 @@ export function getRandomColor() {
     return color;
 }
 
-export async function signOut() {
+export async function signOut(logout) {
   try {
       await Auth.signOut();
+      logout(false)
   } catch (error) {
       console.log('error signing out: ', error);
   }

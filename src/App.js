@@ -14,8 +14,9 @@ import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 import AwsMap from "./AwsMap";
 import { onUpdateUser } from "./graphql/subscriptions";
-import Footer  from "./Footer"
- 
+import Footer from "./Footer"
+import Header from "./Header"
+
 const components = {
   Header() {
     return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>App Name</Heading>
@@ -26,6 +27,7 @@ const components = {
 }
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
@@ -36,9 +38,23 @@ function App() {
   const [myOutgoingFriendRequests, setMyOutgoingFriendsRequests] = useState([]);
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
+  function assessLoggedInState() {
+    Auth.currentAuthenticatedUser()
+      .then((sess) => {
+        console.log("logged in")
+        setLoggedIn(true);
+      }).catch(() => {
+        console.log("not logged in")
+        setLoggedIn(false);
+      })
+  }
+
   useEffect(() => {
-    fetchPostsAndSetPostState();
-  }, []);
+    assessLoggedInState();
+    if (loggedIn) { // TODO set logic for showing the map or showing a new custom login
+      fetchPostsAndSetPostState();
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     if (currentLoggedInUser) {
@@ -112,17 +128,18 @@ function App() {
 
   return (
     <div className={wrapperDiv}>
+      <Header logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/myPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/myPosts" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
             {/* <Route path="/post/:id" element={<Post />} /> */}
             {/* <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} /> */}
-            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
-      <Footer updateOverlayVisibility={updateOverlayVisibility} />
+        <Footer updateOverlayVisibility={updateOverlayVisibility} />
 
       </HashRouter>
       {showOverlay && (

@@ -70,10 +70,10 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
     )
 }
 
-function AwsMap({ posts, updateFriendsListVis, updateOverlayVisibility }) {
+function AwsMap({ logout, posts, updateFriendsListVis, updateOverlayVisibility }) {
     return (
         <View>
-            <Header updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
+            {/* <Header logout={logout} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} /> */}
             <Flex direction={'column'} alignItems={'center'}>
                 <MapView
                     initialViewState={{
