@@ -1,0 +1,55 @@
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 9999;
+  }
+  
+  .welcome-overlay.show {
+    opacity: 1;
+  }
+  
+  .welcome-message {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .circle-animation {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid white;
+    animation: circle-animation 2s linear forwards;
+  }
+  
+  @keyframes circle-animation {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 2;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .welcome-message {
+        font-size: 1rem;
+      }
+      
+  }

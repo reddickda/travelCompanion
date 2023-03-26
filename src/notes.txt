@@ -23,7 +23,7 @@ TODO:
 // look into dynamo update locking 
 // look into caching of responses
 // test friend requests with holly and try to break
-// configure custom auth page etc
+// the welcome overlay shows up on verify too
 
 // TODO - strange bug where friend object was added
 

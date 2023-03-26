@@ -16,13 +16,16 @@ import AwsMap from "./AwsMap";
 import { onUpdateUser } from "./graphql/subscriptions";
 import Footer from "./Footer"
 import Header from "./Header"
+import './App.css'
+import LoginHeading from "./LoginHeading";
+import WelcomeOverlay from './components/WelcomeOverlay';
 
 const components = {
   Header() {
-    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>App Name</Heading>
+    return <><WelcomeOverlay /><LoginHeading /></>
   },
   Footer() {
-    return <Heading backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
+    return <Heading style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', bottom: 0, left:0, zIndex: 9000, width: '100%' }} className="footer" backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
   }
 }
 
