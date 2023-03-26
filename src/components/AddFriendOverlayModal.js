@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../CreatePost.css'
 import './AddFriendOverlayModal.css'
 import { trySendFriendRequest } from "../helpers/apiSendFriendRequestHelpers"
-import { Card, Heading, Button, Grid, SearchField, Flex } from '@aws-amplify/ui-react';
+import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
 
 export default function AddFriendOverlayModal({ currentUser, onclick, username, showModal, showParentSearchModal, outgoingFriendRequests, friends }) {
-
     if (!username)
         return null
 
     async function sendRequest() {
         var result = await trySendFriendRequest(currentUser, username, friends, outgoingFriendRequests)
+        if(result === "Friend already exists or request already sent")
+        {
+            alert("Friend already exists or request already sent")
+        }
+        else{
+            alert("Friend request sent")
+        }
         // console.log(result)
     }
 

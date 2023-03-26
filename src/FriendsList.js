@@ -19,7 +19,7 @@ export default function FriendsList({
     return (
         <>
             <div className="overlay">
-                <Card variation={"elevated"} className="container-style">
+                <Card padding={5} variation={"elevated"} className="container-style">
                 <Heading color='#d0d4d3' width='30vw' level={6}>Friends List</Heading>
                     <div className='scrollable-div'>{friends.map((result, index) => {
                         return <ul

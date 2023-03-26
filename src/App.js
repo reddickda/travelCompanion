@@ -7,27 +7,30 @@ import {
 } from "react-router-dom";
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
-import Post from './Post';
-import Map from './Map';
 import '@aws-amplify/ui-react/styles.css';
-import { Heading, Authenticator, withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Heading, Button, withAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
-import { signOut } from "./utils";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 import AwsMap from "./AwsMap";
 import { onUpdateUser } from "./graphql/subscriptions";
+import Footer from "./Footer"
+import Header from "./Header"
+import './App.css'
+import LoginHeading from "./LoginHeading";
+import WelcomeOverlay from './components/WelcomeOverlay';
 
 const components = {
   Header() {
-    return <Heading backgroundColor={'background.primary'} color={'black'} level={1} padding={3}>Travel Companion</Heading>
+    return <><WelcomeOverlay /><LoginHeading /></>
   },
   Footer() {
-    return <Heading backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
+    return <Heading style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', bottom: 0, left:0, zIndex: 9000, width: '100%' }} className="footer" backgroundColor={'background.primary'} color={'black'} level={5} padding={3}>&copy; All Rights Reserved</Heading>
   }
 }
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
   const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
@@ -38,9 +41,23 @@ function App() {
   const [myOutgoingFriendRequests, setMyOutgoingFriendsRequests] = useState([]);
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
+  function assessLoggedInState() {
+    Auth.currentAuthenticatedUser()
+      .then((sess) => {
+        console.log("logged in")
+        setLoggedIn(true);
+      }).catch(() => {
+        console.log("not logged in")
+        setLoggedIn(false);
+      })
+  }
+
   useEffect(() => {
-    fetchPostsAndSetPostState();
-  }, []);
+    assessLoggedInState();
+    if (loggedIn) { // TODO set logic for showing the map or showing a new custom login
+      fetchPostsAndSetPostState();
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     if (currentLoggedInUser) {
@@ -61,6 +78,8 @@ function App() {
       })
       return () => subscription.unsubscribe();
     }
+
+
   })
 
   async function fetchPostsAndSetPostState() {
@@ -88,7 +107,6 @@ function App() {
       await createApiUser(user);
     }
 
-
     let loggedInUserFriends = userFromApi.data.getUser.friends;
 
     var loggedInUserFriendsData = await Promise.all(loggedInUserFriends.map(async (friendId) => {
@@ -113,18 +131,20 @@ function App() {
 
   return (
     <div className={wrapperDiv}>
+      <Header logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
-            <Route path="/post/:id" element={<Post />} />
-            <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} />
-            <Route path="/myFriendsPosts" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/myPosts" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            {/* <Route path="/post/:id" element={<Post />} /> */}
+            {/* <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} /> */}
+            <Route path="/" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
+        <Footer updateOverlayVisibility={updateOverlayVisibility} />
+
       </HashRouter>
-      <button style={{ height: 40, width: 100 }} type="button" onClick={() => signOut()}>Sign out</button>
       {showOverlay && (
         <CreatePost
           updateOverlayVisibility={updateOverlayVisibility}
@@ -156,10 +176,7 @@ const wrapperDiv = css`
 
 const contentStyle = css`
 height: 100%;
-  padding: 0px 40px;
-  @media screen and (max-width: 500px) {
-    padding: 0px 0px;
-  }
+  padding: 0px 0px;
 `
 const services = {
   async handleSignUp(formData) {

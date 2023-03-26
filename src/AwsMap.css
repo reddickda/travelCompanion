@@ -19,11 +19,11 @@
   font-size: 30px !important;
   font-weight: bold;
 }
-
+/* 
 .mapboxgl-popup-tip{
     display:block !important;
     border-top-color: #3b4b59 !important;
-}
+} */
 
 .circle{
     height: 32px;
@@ -31,7 +31,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 1);
+
     /* background-color: #1e90ff; */
     /* border: 2px solid #fff; */
     border-radius: 100%;
+}
+
+.amplify-card{
+  padding: 0
 }

@@ -32,8 +32,29 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
+[data-amplify-authenticator] {
+  /* --amplify-components-authenticator-modal-height: 1000px; */
+}
+
+[data-amplify-container] {
+  --amplify-components-authenticator-router-background-color: #191a1a;
+  --amplify-colors-background-primary: #191a1a;
+  --amplify-components-authenticator-state-inactive-background-color: #191a1a;
+  --amplify-components-authenticator-router-border-color: #191a1a;
+  --amplify-components-heading-color: #bcbec2;
+  --amplify-components-radiogroup-radio-label-color: #bcbec2;
+}
+
+@media (max-width: 500px) {
+
+  [data-amplify-router] {
+    height: 300px
+  }
+
+}
