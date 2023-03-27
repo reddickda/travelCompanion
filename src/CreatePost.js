@@ -10,6 +10,7 @@ import {
 import './CreatePost.css'
 import { SearchResults } from './components/CreatePost/SearchResults';
 import { FileUploadInput } from './components/CreatePost/FileUploadInput';
+import { HeaderWithClose } from './components/HeaderWithClose';
 
 const initialState = {
   name: '',
@@ -119,8 +120,8 @@ export default function CreatePost({
   return (
     <>
       <div className="overlay">
-        <Card padding={5}  variation={"elevated"} className="container-style">
-          <Heading color='#d0d4d3' width='30vw' level={6}>Create Post</Heading>
+        <Card padding={5} variation={"elevated"} className="container-style">
+          <HeaderWithClose textContent={'Create Post'} onClick={() => updateOverlayVisibility(false)} />
           <Flex direction="column" wrap="nowrap">
             <TextField
               maxLength={30}
@@ -131,7 +132,7 @@ export default function CreatePost({
             />
             <LocationSearch />
             <TextField
-              placeholder="Description"
+              placeholder="Caption"
               name="description"
               onChange={onChangeText}
               maxLength={30}
@@ -139,12 +140,11 @@ export default function CreatePost({
             />
             <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile} />
             {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
-            <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
-              {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
-              <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
-              <Button variation="destructive" height={"30px"} size={"small"} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
-            </Grid>
           </Flex>
+          <Grid height="100%" alignItems={'flex-end'} columnGap="0.5rem" templateColumns={"1fr 1fr"}>
+            {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
+            <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
+          </Grid>
         </Card>
         {showSearchResults && <SearchResults
           searchResults={searchResults}

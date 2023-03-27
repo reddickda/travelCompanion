@@ -3,7 +3,9 @@ import './AddFriendDiv.css'
 import { getAllUsers } from '../helpers/apiHelpers'
 import ScrollableFriendsListOverlay from './ScrollableFriendsListOverlay';
 import { Auth } from 'aws-amplify';
-import { Card, Heading, Button, Grid, SearchField, Flex } from '@aws-amplify/ui-react';
+import { Card, Heading, Button, SearchField, Flex } from '@aws-amplify/ui-react';
+import { HeaderWithClose } from './HeaderWithClose';
+
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
@@ -56,18 +58,13 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
 
     return (
         <div className="overlay">
-            <Card className='container-style'>
-                <Heading padding={2} color='#d0d4d3' width='40vw' level={6}>Adding Friend</Heading>
+            <Card padding={5} variation={"elevated"} className='container-style'>
+                <HeaderWithClose textContent='Adding Friend' onClick={() => showOverlay(false)} /> 
                 <Flex direction="column" height={"100%"}>
                     <FriendSearch />
-                    <div style={buttonDivStyle}>
-                        <Button variation="destructive" size="small" style={{ marginTop: 5 }} onClick={() => showOverlay(false)}>Cancel</Button>
-                    </div>
                 </Flex>
             </Card>
             {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends} />}
         </div>
     )
 }
-
-const buttonDivStyle = { display: "flex", alignItems: "flex-end", justifyContent: "flex-end", height: "100%" }

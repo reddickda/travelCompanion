@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
 import FriendsRequestOverlay from './components/FriendsRequestOverlay';
 import FriendOverlay from './components/FriendOverlay';
-import { Card, Heading, Button } from '@aws-amplify/ui-react';
+import { Card, Heading, Button, Grid } from '@aws-amplify/ui-react';
+import { CloseButton } from './components/CloseButton';
+import { HeaderWithClose } from './components/HeaderWithClose';
 import './FriendsList.css'
 import './CreatePost.css'
 
@@ -20,7 +22,7 @@ export default function FriendsList({
         <>
             <div className="overlay">
                 <Card padding={5} variation={"elevated"} className="container-style">
-                <Heading color='#d0d4d3' width='30vw' level={6}>Friends List</Heading>
+                <HeaderWithClose textContent={'Friends List'} onClick={() => updateOverlayVisibility(false)} />
                     <div className='scrollable-div'>{friends.map((result, index) => {
                         return <ul
                             className='scrollable-ul'
@@ -34,11 +36,12 @@ export default function FriendsList({
                         </ul>
                     })}
                     </div>
-                    <Button size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowAddFriendOverlay(true)}>Add Friend</Button>
-                    <Button size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>{incomingFriendRequests.length} Friend Requests</Button>
-                    <Button size="small" variation="destructive" style={{ marginTop: 5 }} onClick={() => updateOverlayVisibility(false)}>Cancel</Button>
+                    <Grid templateColumns={'1fr 1fr'} columnGap={"1em"}>
+                        <Button fontSize={'12px'} height='40px' size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowAddFriendOverlay(true)}>Add Friend</Button>
+                        <Button fontSize={'12px'} height='40px' size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>{incomingFriendRequests.length} Friend Requests</Button>
+                    </Grid>
                 </Card>
-                {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} friends={friends} outgoingFriendRequests={outgoingFriendRequests}/>}
+                {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} friends={friends} outgoingFriendRequests={outgoingFriendRequests} />}
                 {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay incomingFriendRequests={incomingFriendRequests} friends={friends} showOverlay={setShowIncomingFriendRequestsOverlay} />}
                 {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} username={friendClicked} currentLoggedInUser={currentLoggedInUser} userFriends={friends} />}
             </div>
