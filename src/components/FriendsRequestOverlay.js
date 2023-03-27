@@ -34,7 +34,7 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
     return (
         <>
             <div className="overlay">
-                <Card className='container-style'>
+                <Card padding={5} variation={"elevated"} className='container-style'>
                     <HeaderWithClose textContent={'Friend Requests'} onClick={() => showOverlay(false)} />
                     <div className='scrollable-div'>{incomingFriendRequests.map((result, index) => {
                         return <ul
@@ -50,16 +50,17 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
                     })}
                     </div>
                 </Card>
-                {showRequest && <div style={{ zIndex: 10001 }} className="overlay">
-                    <Card className='container-style'>
-                        <HeaderWithClose textContent={'Accept Request from'} onClick={() => setShowRequest(false)} />
-                        <Heading textAlign={'center'} width='100%' level={5}>{userToAdd}</Heading>
-                            <Grid height={'100%'} justifyContent='flex-end' templateColumns={'1fr 1fr'} columnGap={'1em'} >
+                {showRequest &&
+                    <div style={{ zIndex: 10001 }} className="overlay">
+                        <Card padding={5} variation={"elevated"} className='container-style'>
+                            <HeaderWithClose textContent={'Accept Request from'} onClick={() => setShowRequest(false)} />
+                            <Heading textAlign={'center'} width='100%' level={5}>{userToAdd}</Heading>
+                            <Grid height={'100%'} alignItems='flex-end' templateColumns={'1fr 1fr'} columnGap={'1em'} >
                                 <Button height={'40px'} size="small" variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept</Button>
                                 <Button height={'40px'} size="small" variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject</Button>
                             </Grid>
-                    </Card>
-                </div>}
+                        </Card>
+                    </div>}
             </div>
         </>
     )

@@ -1,10 +1,12 @@
-import { Heading, Grid } from '@aws-amplify/ui-react';
+import { Heading, Grid, Flex } from '@aws-amplify/ui-react';
 import { CloseButton } from './CloseButton';
 
 export function HeaderWithClose({ textContent, onClick }) {
     return (
-        <Grid templateColumns={'1fr 1fr'}>
-            <Heading color='#d0d4d3' width='30vw' level={6}>{textContent}</Heading>
-            <CloseButton onClick={onClick} />
+        <Grid templateColumns={'2fr 1fr'}>
+            <Heading color='#d0d4d3' level={6}>{textContent}</Heading>
+            <Flex justifyContent={'flex-end'}>
+                <CloseButton onClick={onClick} />
+            </Flex>
         </Grid>)
 }

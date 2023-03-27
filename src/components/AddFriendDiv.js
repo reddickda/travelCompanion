@@ -58,7 +58,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
 
     return (
         <div className="overlay">
-            <Card className='container-style'>
+            <Card padding={5} variation={"elevated"} className='container-style'>
                 <HeaderWithClose textContent='Adding Friend' onClick={() => showOverlay(false)} /> 
                 <Flex direction="column" height={"100%"}>
                     <FriendSearch />

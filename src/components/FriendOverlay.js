@@ -12,7 +12,7 @@ export default function FriendOverlay({ showOverlay, username, currentLoggedInUs
 
     return (
         <div className="overlay">
-            <Card className='container-style'>
+            <Card padding={5} variation={"elevated"} className='container-style'>
                 <HeaderWithClose textContent={`Viewing: ${username}`} onClick={() => showOverlay(false)} />
                 <Grid alignItems={'flex-end'} justifyContent="flex-end" height="100%" columnGap="1rem" templateColumns={"1fr 1fr"}>
                     <div></div>

@@ -10,7 +10,6 @@ import {
 import { useState } from 'react'
 import { Marker, Popup, useMap } from "react-map-gl"
 import './AwsMap.css';
-import Header from './Header'
 import { getRandomColor } from './utils'
 
 function MarkerWithPopup({ latitude, longitude, username, description, image, initials }) {
@@ -38,6 +37,7 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                     latitude={latitude}
                     longitude={longitude}
                     offset={{ bottom: [0, -20] }}
+                    closeButton={false}
                     onClose={() => { setShowPopup(false); setGrowPopup(false) }}
                     maxWidth='95%'
                     anchor='bottom'
@@ -45,7 +45,7 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                     <Card
                         variation="elevated"
                         backgroundColor="#3b4b59"
-                        padding={0}
+                        padding={1}
                         maxWidth={growPopup ? 250 : 150}
                         style={{
                             boxShadow: '0px 2px 15px rgba(0, 0, 0, 1)'
@@ -53,16 +53,14 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
                         onClick={() => { setGrowPopup(!growPopup) }}
 
                     >
-                        <Heading padding={5} color={'white'} level={5}>{username}</Heading>
-                        <Text style={{ overflowX: 'scroll' }} color={'white'}>{description}</Text>
-                        {/* <Flex justifyContent={'center'}> */}
+                        <Heading padding={2} color={'white'} level={6}>{username}</Heading>
+                        <Text isTruncated="true" color={'white'}>{description}</Text>
                         <Image
                             objectFit={'fill'}
                             width={growPopup ? "250px" : 150}
                             height={growPopup ? "250px" : 150}
                             src={image}
                         />
-                        {/* </Flex> */}
                     </Card>
                 </Popup>
             )}
@@ -70,16 +68,15 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
     )
 }
 
-function AwsMap({ logout, posts, updateFriendsListVis, updateOverlayVisibility }) {
+function AwsMap({ posts }) {
     return (
         <View>
-            {/* <Header logout={logout} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} /> */}
             <Flex direction={'column'} alignItems={'center'}>
                 <MapView
                     initialViewState={{
-                        longitude: -122.3381659,
-                        latitude: 47.615686,
-                        zoom: 3,
+                        longitude: -99.3381659,
+                        latitude: 38.615686,
+                        zoom: 2,
                     }}
                     style={{ width: '100%', height: '100vh' }}
                 >
