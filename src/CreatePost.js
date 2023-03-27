@@ -5,7 +5,7 @@ import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
 import { createApiPost, getCurrentApiUser } from './helpers/apiHelpers';
 import {
-  Card, Flex, Button, Grid, TextField, SearchField
+  Flex, Button, Grid, TextField, SearchField
 } from '@aws-amplify/ui-react';
 import { SearchResults } from './components/CreatePost/SearchResults';
 import { FileUploadInput } from './components/CreatePost/FileUploadInput';

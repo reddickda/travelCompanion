@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Auth } from 'aws-amplify';
-import { Button, Grid, Menu, Card, Heading, Flex, Text, MenuItem } from "@aws-amplify/ui-react"
+import { Button, Grid, Menu, Card, Heading, Flex, MenuItem } from "@aws-amplify/ui-react"
 import { signOut } from "./utils";
-import { Link } from 'react-router-dom'
 import './Header.css';
 
-export default function Header({ updateOverlayVisibility, updateFriendsListVis }) {
+export default function Header({  updateFriendsListVis }) {
   const [loggedInUser, setLoggedInUser] = useState("");
 
   useEffect(() => {

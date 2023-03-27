@@ -44,7 +44,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
         }
 
         const handleSubmit = (event) => {
-            let returnedUsers = searchFriends(event.target.value)
+            let returnedUsers = searchFriends(event)
             if (returnedUsers.length === 1 && returnedUsers[0] === currentLoggedInUser) {
                 return null;
             } else {
@@ -52,7 +52,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
             }
         }
 
-        return <SearchField size="small" className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
+        return <SearchField size="small" className="input-style" type="text" onSubmit={(event) => handleSubmit(event)} onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
     }
 
     return (

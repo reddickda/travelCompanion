@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Grid, Card, Flex } from "@aws-amplify/ui-react"
 import { Link } from 'react-router-dom'
 import './Header.css';
 import { AiOutlinePlus} from "react-icons/ai"
 
-export default function Footer({ updateOverlayVisibility, updateFriendsListVis }) {
-    const [buttonBottom, setButtonBottom] = useState(20);
-    const [scrollDir, setScrollDir] = useState("scrolling down");
+export default function Footer({ updateOverlayVisibility }) {
+    // const [buttonBottom, setButtonBottom] = useState(20);
+    // const [scrollDir, setScrollDir] = useState("scrolling down");
 
     // var bottomMenu = document.querySelector('.bottom-button');
     // var searchBar = document.querySelector('.search-bar');

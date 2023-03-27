@@ -8,7 +8,7 @@ import {
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
-import { Heading, Button, withAuthenticator } from '@aws-amplify/ui-react';
+import { Heading, withAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";

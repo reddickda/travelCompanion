@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { tryAcceptFriendRequest } from "../helpers/apiAcceptFriendRequestHelper";
 import { tryRejectFriendRequest } from '../helpers/apiRejectFriendRequestHelper';
 import { Auth } from 'aws-amplify';
-import { Card, Heading, Button, Grid } from '@aws-amplify/ui-react';
+import { Heading, Button, Grid } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
 import { OverlayModal } from './OverlayModal';
 import '../CreatePost.css'
@@ -25,11 +25,11 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
     }
 
     async function acceptRequest(userId, newFriend) {
-        var result = await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
+        await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
     }
 
     async function rejectRequest(userId, newFriend) {
-        var result = await tryRejectFriendRequest(userId, newFriend, incomingFriendRequests)
+         await tryRejectFriendRequest(userId, newFriend, incomingFriendRequests)
     }
 
     return (
