@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AddFriendOverlayModal from "./AddFriendOverlayModal"
 import { OverlayModal } from './OverlayModal';
 import { HeaderWithClose } from './HeaderWithClose';
+import { Button } from '@aws-amplify/ui-react';
 
 import '../CreatePost.css'
 
@@ -17,7 +18,7 @@ export default function ScrollableFriendsListOverlay({ currentUser, data, setSea
             <OverlayModal>
                 <HeaderWithClose textContent={'User Returned:'} onClick={() => setSearchResults([])} />
                 <div className='scrollable-div'>{data.map((result, index) => {
-                    return <ul
+                    return <Button
                         className='scrollable-ul'
                         name="User"
                         onClick={() => {
@@ -26,7 +27,7 @@ export default function ScrollableFriendsListOverlay({ currentUser, data, setSea
                         }}
                         key={index}>
                         {result}
-                    </ul>
+                    </Button>
                 })}
                 </div>
             </OverlayModal>

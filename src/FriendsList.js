@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AddFriendDiv from "./components/AddFriendDiv"
 import FriendsRequestOverlay from './components/FriendsRequestOverlay';
 import FriendOverlay from './components/FriendOverlay';
-import { Button, Grid } from '@aws-amplify/ui-react';
+import { Button, Grid, Flex } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './components/HeaderWithClose';
 import { OverlayModal } from './components/OverlayModal';
 import './FriendsList.css'
@@ -22,9 +22,14 @@ export default function FriendsList({
         <>
             <OverlayModal>
                 <HeaderWithClose textContent={'Friends List'} onClick={() => updateOverlayVisibility(false)} />
-                <div className='scrollable-div'>{friends.map((result, index) => {
-                    return <ul
-                        className='scrollable-ul'
+                <Flex>{friends.map((result, index) => {
+                    return <Button
+                    backgroundColor={"#2b2a33"}
+                    size="small"
+                    color="white"
+                    justifyContent={"center"}
+                    alignItems="center"
+                    textAlign={"center"}
                         name="Location"
                         onClick={() => {
                             setFriendClicked(result.username);
@@ -32,9 +37,9 @@ export default function FriendsList({
                         }}
                         key={index}>
                         {result.username}
-                    </ul>
+                    </Button>
                 })}
-                </div>
+                </Flex>
                 <Grid templateColumns={'1fr 1fr'} columnGap={"1em"}>
                     <Button fontSize={'12px'} height='40px' size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowAddFriendOverlay(true)}>Add Friend</Button>
                     <Button fontSize={'12px'} height='40px' size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>{incomingFriendRequests.length} Friend Requests</Button>
