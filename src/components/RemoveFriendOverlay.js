@@ -2,6 +2,7 @@ import React from 'react';
 import './AddFriendDiv.css'
 import { tryRemoveFriend } from '../helpers/apiRemoveFriendHelper'
 import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
+import { HeaderWithClose } from './HeaderWithClose';
 import '../CreatePost.css'
 import './AddFriendDiv.css'
 
@@ -16,13 +17,11 @@ export default function RemoveFriendOverlay({ showRemoveOverlay, username, curre
     return (
         <div className="overlay">
             <Card className='container-style'>
-                <Heading color='#d0d4d3' width='100%' level={6}>Are you sure?</Heading>
-                <Flex alignItems="flex-end" height="100%" justifyContent={"center"}>
-                    <Grid columnGap="0.5rem" templateColumns={"1fr 1fr"}>
-                        <Button variation="primary" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => removeFriend()}>Yes</Button>
-                        <Button variation="destructive" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => showRemoveOverlay(false)}>No</Button>
-                    </Grid>
-                </Flex>
+                <HeaderWithClose textContent={'Are you sure?'} onClick={() => showRemoveOverlay(false)} />
+                <Grid height="100%" alignItems={'flex-end'} columnGap="1rem" templateColumns={"1fr 1fr"}>
+                    <div></div>
+                    <Button variation="destructive" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => removeFriend()}>Remove</Button>
+                </Grid>
             </Card>
         </div>
     )

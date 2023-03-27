@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { tryAcceptFriendRequest } from "../helpers/apiAcceptFriendRequestHelper";
 import { tryRejectFriendRequest } from '../helpers/apiRejectFriendRequestHelper';
 import { Auth } from 'aws-amplify';
-import { Card, Heading, Button, Grid, Flex } from '@aws-amplify/ui-react';
+import { Card, Heading, Button, Flex, Grid } from '@aws-amplify/ui-react';
+import { HeaderWithClose } from './HeaderWithClose';
 import '../CreatePost.css'
 
 export default function FriendsRequestOverlay({ showOverlay, friends, incomingFriendRequests }) {
@@ -34,7 +35,7 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
         <>
             <div className="overlay">
                 <Card className='container-style'>
-                    Friend Requests
+                    <HeaderWithClose textContent={'Friend Requests'} onClick={() => showOverlay(false)} />
                     <div className='scrollable-div'>{incomingFriendRequests.map((result, index) => {
                         return <ul
                             className='scrollable-ul'
@@ -48,17 +49,15 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
                         </ul>
                     })}
                     </div>
-                    <Button size="small" height="30px" variation="destructive" style={{ marginTop: 5 }} onClick={() => showOverlay(false)}>Cancel</Button>
                 </Card>
                 {showRequest && <div style={{ zIndex: 10001 }} className="overlay">
                     <Card className='container-style'>
-                        <Heading color='#d0d4d3' width='100%' level={6}>Accept Request from</Heading> 
-                        <Heading width='100%' level={5}>{userToAdd}</Heading>
-                        <Flex height="100%" direction="column" justifyContent={"flex-end"}>
-                            <Button variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept Request</Button>
-                            <Button variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject Request</Button>
-                            <Button variation="destructive" onClick={() => setShowRequest(false)}>Cancel</Button>
-                        </Flex>
+                        <HeaderWithClose textContent={'Accept Request from'} onClick={() => setShowRequest(false)} />
+                        <Heading textAlign={'center'} width='100%' level={5}>{userToAdd}</Heading>
+                            <Grid height={'100%'} justifyContent='flex-end' templateColumns={'1fr 1fr'} columnGap={'1em'} >
+                                <Button height={'40px'} size="small" variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept</Button>
+                                <Button height={'40px'} size="small" variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject</Button>
+                            </Grid>
                     </Card>
                 </div>}
             </div>
