@@ -5,12 +5,14 @@ import { Auth } from 'aws-amplify';
 import { getPlaces } from './utils';
 import { createApiPost, getCurrentApiUser } from './helpers/apiHelpers';
 import {
-  Card, Flex, Button, Grid, TextField, SearchField, Heading
+  Card, Flex, Button, Grid, TextField, SearchField
 } from '@aws-amplify/ui-react';
-import './CreatePost.css'
 import { SearchResults } from './components/CreatePost/SearchResults';
 import { FileUploadInput } from './components/CreatePost/FileUploadInput';
 import { HeaderWithClose } from './components/HeaderWithClose';
+import { OverlayModal } from './components/OverlayModal';
+
+import './CreatePost.css'
 
 const initialState = {
   name: '',
@@ -119,8 +121,7 @@ export default function CreatePost({
 
   return (
     <>
-      <div className="overlay">
-        <Card padding={5} variation={"elevated"} className="container-style">
+      <OverlayModal>
           <HeaderWithClose textContent={'Create Post'} onClick={() => updateOverlayVisibility(false)} />
           <Flex direction="column" wrap="nowrap">
             <TextField
@@ -145,14 +146,13 @@ export default function CreatePost({
             {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
             <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
           </Grid>
-        </Card>
+        </OverlayModal>
         {showSearchResults && <SearchResults
           searchResults={searchResults}
           setLatLong={setLatLong}
           setShowSearchResults={setShowSearchResults}
           setSearchResults={setSearchResults}
           setLocationString={setLocationString} />}
-      </div>
     </>
   )
 }

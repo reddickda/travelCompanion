@@ -25,7 +25,9 @@ TODO:
 // test friend requests with holly and try to break
 // the welcome overlay shows up on verify too
 
+
 // TODO - strange bug where friend object was added
+// THIS HAPPENS ON ACCEPT FRIEND REQUEST - keep testing
 
 //Friend Notes: 
 // friends list displayed on click friend
