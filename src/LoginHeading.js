@@ -8,13 +8,13 @@ export default function LoginHeading() {
       <Card variation={'elevated'} style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', top: 0, left:0, zIndex: 9000, width: '100%' }}>
         {/* <Flex alignItems={'center'} justifyContent={'space-between'}> */}
         <Grid height={50} justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr"}>
-          <Heading color='#bcbec2' textAlign={'center'} level={6}>Welcome to App Name</Heading>
+          <Heading color='#bcbec2' textAlign={'center'} level={6}>Welcome to My Friend Map</Heading>
         </Grid>
       </Card>
       <Card variation={'elevated'} style={{ borderRadius: 0, backgroundColor: '#191a1a', position: 'fixed', top: 50, left:0, zIndex: 9000, width: '100%' }}>
         {/* <Flex alignItems={'center'} justifyContent={'space-between'}> */}
         <Grid height={50} justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr"}>
-          <Heading color='#bcbec2' textAlign={'center'} level={6}>App Name allows you to connect with friends and show you their adventures.</Heading>
+          <Heading color='#bcbec2' textAlign={'center'} level={6}>My Friend Map allows you to connect with friends and show you their adventures.</Heading>
         </Grid>
       </Card>
       <Card variation={'elevated'} style={{ borderRadius: 0, backgroundColor: '#191a1a', position: 'fixed', top: 100, left:0, zIndex: 9000, width: '100%' }}>

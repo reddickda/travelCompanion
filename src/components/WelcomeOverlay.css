@@ -27,8 +27,8 @@
   .circle-animation {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
-    border: 3px solid white;
+    /* border-radius: 50%;
+    border: 3px solid white; */
     animation: circle-animation 2s linear forwards;
   }
   
@@ -53,3 +53,23 @@
       }
       
   }
+
+  .growing-react-icon {
+    color: antiquewhite;
+    animation: pulse 2s ease-in-out infinite;
+    height: "100px";
+    width: "100px";
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  

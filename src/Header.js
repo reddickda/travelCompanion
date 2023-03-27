@@ -25,13 +25,13 @@ export default function Header({ updateOverlayVisibility, updateFriendsListVis }
           <Flex justifyContent={'flex-start'} paddingLeft={10}>
             <Button color={'#bcbec2'} onClick={() => updateFriendsListVis(true)}>Friends</Button>
           </Flex>
-          <Heading textAlign={'center'} justifyContent='center' color='#bcbec2' width='30vw' level={6}>App Name</Heading>
+          <Heading textAlign={'center'} justifyContent='center' color='#bcbec2' width='30vw' level={6}>My Friend Map</Heading>
           <Flex paddingRight={10} justifyContent={'flex-end'} >
             <Menu menuAlign="end" >
               <MenuItem onClick={() => alert('calendar clicked')}>
                 See Posts From Date
               </MenuItem>
-              <MenuItem onClick={() => alert('Account clicked')}>
+              <MenuItem onClick={() => alert(`Signed in as ${loggedInUser}`)}>
                 Account
               </MenuItem>
               <MenuItem onClick={() => signOut()}>
