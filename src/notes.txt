@@ -29,6 +29,7 @@ TODO:
 // create post on mobile outside of modal
 // add MY posts by date too - test
 // use aws location search
+// do another expensie check on requests and maybe redo method of subscritions etc
 
 // TODO - strange bug where friend object was added
 // THIS HAPPENS ON ACCEPT FRIEND REQUEST - keep testing
