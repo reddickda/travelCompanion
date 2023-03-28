@@ -24,7 +24,7 @@ export async function createApiUser(currentAuthenticatedUser) {
     friends: [],
     incomingFriendRequests: [],
     outgoingFriendRequests: []
-  }; //id: uuidv4()
+  };
 
   return await API.graphql({
     query: createUser,
@@ -35,6 +35,28 @@ export async function createApiUser(currentAuthenticatedUser) {
 
 export async function getPostsByUsername(username) {
   return await API.graphql(graphqlOperation(postsByUsernameAndName, { username: username, authMode: 'AMAZON_COGNITO_USER_POOLS' }))
+}
+
+// query MyQuery {
+//   listPosts(filter: {or: {username: {eq: "test3", eq: "buttons"}}}) {
+//     items {
+//       username
+//       id
+//       lastName
+//     }
+//   }
+// }
+
+export async function getPostsByIds(ids) {
+
+  const filter = {
+    or: ids.map(id => ({ username: { eq: id } }))
+  };
+
+  const { data: { listPosts: { items: posts } } } = await API.graphql(graphqlOperation(listPosts, {
+    filter: filter
+  }));
+  return posts;
 }
 
 export async function createApiPost(postInfo, formState) {

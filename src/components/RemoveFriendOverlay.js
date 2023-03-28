@@ -3,11 +3,14 @@ import { tryRemoveFriend } from '../helpers/apiRemoveFriendHelper'
 import { Button, Grid } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
 import { OverlayModal } from './OverlayModal';
+import { useMyContext } from '../ContextProvider';
 
-export default function RemoveFriendOverlay({ showRemoveOverlay, username, currentLoggedInUser, showParentOverlay, userFriends }) {
+export default function RemoveFriendOverlay({ showRemoveOverlay, friendToRemove, showParentOverlay, userFriends }) {
+    const { state } = useMyContext();
+    const { loggedInUser, friendsUsernames } = state;
 
     async function removeFriend() {
-        await tryRemoveFriend(currentLoggedInUser, username, userFriends)
+        await tryRemoveFriend(loggedInUser, friendToRemove, friendsUsernames)
         showRemoveOverlay(false);
         showParentOverlay(false);
     }

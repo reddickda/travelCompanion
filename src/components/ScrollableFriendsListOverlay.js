@@ -6,9 +6,9 @@ import { Button } from '@aws-amplify/ui-react';
 
 import '../CreatePost.css'
 
-export default function ScrollableFriendsListOverlay({ currentUser, data, setSearchResults, friends, outgoingFriendRequests }) {
+export default function ScrollableFriendsListOverlay({ data, setSearchResults }) {
     const [showAddFriendModal, setShowAddFriendModal] = useState(false)
-    const [userToAdd, setUserToAdd] = useState("")
+    const [friendToAdd, setFriendToAdd] = useState("")
 
     if (!data)
         return null
@@ -23,7 +23,7 @@ export default function ScrollableFriendsListOverlay({ currentUser, data, setSea
                         name="User"
                         onClick={() => {
                             setShowAddFriendModal(true)
-                            setUserToAdd(result)
+                            setFriendToAdd(result)
                         }}
                         key={index}>
                         {result}
@@ -31,7 +31,7 @@ export default function ScrollableFriendsListOverlay({ currentUser, data, setSea
                 })}
                 </div>
             </OverlayModal>
-            {showAddFriendModal && <AddFriendOverlayModal currentUser={currentUser} showModal={setShowAddFriendModal} username={userToAdd} showParentSearchModal={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends} />}
+            {showAddFriendModal && <AddFriendOverlayModal showModal={setShowAddFriendModal} friendToAdd={friendToAdd} showParentSearchModal={setSearchResults} />}
         </>
     )
 }

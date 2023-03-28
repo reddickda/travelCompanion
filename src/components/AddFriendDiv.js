@@ -8,10 +8,9 @@ import { OverlayModal } from './OverlayModal';
 
 import './AddFriendDiv.css'
 
-export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, friends }) {
+export default function AddFriendDiv({ showOverlay }) {
     const [allCurrentUsers, setAllCurrentUsers] = useState([]);
     const [searchResults, setSearchResults] = useState([])
-    const [selectedUser, setSelectedUser] = useState("")
     const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
 
     useEffect(() => {
@@ -52,7 +51,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
             }
         }
 
-        return <SearchField size="small" className="input-style" type="text" onSubmit={(event) => handleSubmit(event)} onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
+        return <SearchField size="small" className="input-style" type="text" onSubmit={(event) => handleSubmit(event)} onKeyDown={handleKeyDown} placeholder={"Search For User"} />
     }
 
     return (
@@ -63,7 +62,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
                     <FriendSearch />
                 </Flex>
             </OverlayModal>
-            {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends} />}
+            {searchResults.length > 0 && <ScrollableFriendsListOverlay data={searchResults} setSearchResults={setSearchResults} />}
         </>
     )
 }
