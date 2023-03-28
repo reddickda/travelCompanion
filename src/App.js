@@ -9,16 +9,18 @@ import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
 import { Heading, withAuthenticator } from '@aws-amplify/ui-react';
-import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
+import { createApiUser, getCurrentApiUser, getPostsLastDay, getPostsByIds } from "./helpers/apiHelpers";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
 import AwsMap from "./AwsMap";
-import { onUpdateUser } from "./graphql/subscriptions";
+import { onCreatePost, onUpdateUser } from "./graphql/subscriptions";
 import Footer from "./Footer"
 import Header from "./Header"
-import './App.css'
 import LoginHeading from "./LoginHeading";
 import WelcomeOverlay from './components/WelcomeOverlay';
+import { useMyContext } from "./ContextProvider";
+import './App.css'
+
 
 const components = {
   Header() {
@@ -31,15 +33,12 @@ const components = {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [showOverlay, updateOverlayVisibility] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
-  const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
-  const [friendsListVis, updateFriendsListVis] = useState(false);
-  const [myFriendsList, setMyFriendsList] = useState([]);
-  const [myIncomingFriendRequests, setMyIncomingFriendsRequests] = useState([]);
-  const [myOutgoingFriendRequests, setMyOutgoingFriendsRequests] = useState([]);
-  const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
+  // const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
+
+  const { state, updateLoggedInUser, updateFriendsUsernames, updateFriendsData, updateIncomingFriendRequests, updateOutgoingFriendRequests, updateMyFriendsPosts } = useMyContext();
+  const { isFriendsListVisible, isCreatePostVisible, friendsData, loggedInUser, myFriendsPosts, friendsUsernames } = state;
 
   function assessLoggedInState() {
     Auth.currentAuthenticatedUser()
@@ -60,23 +59,48 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-    if (currentLoggedInUser) {
+    if (loggedInUser) {
       const subscription = API.graphql(graphqlOperation(onUpdateUser, {
-        username: currentLoggedInUser
+        username: loggedInUser
       })).subscribe({
         next: async ({ provider, value }) => {
-          let newFriendRequestCount = await getCurrentApiUser(currentLoggedInUser);
+          
+          let newFriendRequestCount = await getCurrentApiUser(loggedInUser);
           let allFriends = await Promise.all(newFriendRequestCount.data.getUser.friends.map(async (friendId) => {
             const friendData = await getCurrentApiUser(friendId);
             return friendData.data.getUser;
           }))
-          setMyFriendsList(allFriends);
-          setMyIncomingFriendsRequests(newFriendRequestCount.data.getUser.incomingFriendRequests)
-          setMyOutgoingFriendsRequests(newFriendRequestCount.data.getUser.outgoingFriendRequests)
+          let allFriendsAsUsername = allFriends.map((friend) => friend.username); //  get all usernames of friends and set here for live refresh
+
+          // context
+          updateOutgoingFriendRequests(newFriendRequestCount.data.getUser.outgoingFriendRequests)
+          updateFriendsUsernames(allFriendsAsUsername);
+          updateFriendsData(allFriends);
+          updateIncomingFriendRequests(newFriendRequestCount.data.getUser.incomingFriendRequests)
         },
         error: (error) => console.warn(error)
       })
-      return () => subscription.unsubscribe();
+     
+      // const friendsPosts = await getPostsByIds(loggedInUserFriends);
+
+      const onCreatePostSubscription = API.graphql(graphqlOperation(onCreatePost, {
+        username: loggedInUser
+      })).subscribe({
+        next: async({ value: { data } }) => {
+          if(friendsUsernames.indexOf(data.onCreatePost.username) >= 0){
+            let newMyFriendsPosts = [...myFriendsPosts, data.onCreatePost]
+
+            newMyFriendsPosts = await Promise.all(newMyFriendsPosts.map(async post => {
+              const imageKey = await Storage.get(post.image);
+              post.image = imageKey;
+              return post;
+            }));
+            updateMyFriendsPosts(newMyFriendsPosts);
+          }
+        },
+      });
+
+      return () =>{ subscription.unsubscribe(); onCreatePostSubscription.unsubscribe();}
     }
 
 
@@ -120,48 +144,51 @@ function App() {
     const myPostData = postsArray.filter(p => p.owner === user.username);
 
     var friendsPostsArray = postsArray.filter(post => userFromApi.data.getUser.friends.indexOf(post.username) >= 0)
-    setCurrentLoggedInUser(user.username)
-    setMyIncomingFriendsRequests(loggedInUserIncomingFriendRequests)
-    setMyOutgoingFriendsRequests(loggedInUserOutgoingFriendRequests)
-    setMyFriendsList(loggedInUserFriendsData)
+
+    let friendPostData = await getPostsByIds(loggedInUserFriends);
+
+    friendPostData = await Promise.all(friendPostData.map(async post => {
+      const imageKey = await Storage.get(post.image);
+      post.image = imageKey;
+      return post;
+    }));
+
     updateMyPosts(myPostData);
     updatePosts(postsArray);
-    updateMyFriendsPosts(friendsPostsArray)
+
+    // using context
+    updateMyFriendsPosts(friendPostData)
+    updateOutgoingFriendRequests(loggedInUserOutgoingFriendRequests)
+    updateIncomingFriendRequests(loggedInUserIncomingFriendRequests)
+    updateLoggedInUser(user.username);
+    updateFriendsUsernames(loggedInUserFriends);
+    updateFriendsData(loggedInUserFriendsData)
   }
-  console.log({myFriendsPosts})
 
   return (
     <div className={wrapperDiv}>
-      <Header myFriends={myFriendsList} setFriendsPosts={updateMyFriendsPosts} logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
+      <Header logout={setLoggedIn} />
       <HashRouter>
         <div className={contentStyle}>
           <Routes>
-            <Route path="/myPosts" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myPosts} />} />
+            <Route path="/myPosts" element={<AwsMap posts={myPosts} />} />
             {/* <Route path="/post/:id" element={<Post />} /> */}
             {/* <Route path="/allPostsMap" element={<AwsMap updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={posts} />} /> */}
-            <Route path="/" element={<AwsMap logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} posts={myFriendsPosts} />} />
+            <Route path="/" element={<AwsMap posts={myFriendsPosts} />} />
             <Route path='*' element={<Navigate to="/" />} />
           </Routes>
         </div>
-        <Footer updateOverlayVisibility={updateOverlayVisibility} />
+        <Footer />
 
       </HashRouter>
-      {showOverlay && (
+      {isCreatePostVisible && (
         <CreatePost
-          updateOverlayVisibility={updateOverlayVisibility}
           updatePosts={fetchPostsAndSetPostState}
           posts={posts}
         />
       )}
-      {friendsListVis &&
-        <FriendsList
-          updateOverlayVisibility={updateFriendsListVis}
-          updateFriends={setMyFriendsList}
-          friends={myFriendsList}
-          incomingFriendRequests={myIncomingFriendRequests}
-          currentLoggedInUser={currentLoggedInUser}
-          outgoingFriendRequests={myOutgoingFriendRequests}
-        />}
+      {isFriendsListVisible &&
+        <FriendsList />}
     </div>
   )
 }

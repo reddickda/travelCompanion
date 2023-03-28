@@ -11,6 +11,7 @@ import { SearchResults } from './components/CreatePost/SearchResults';
 import { FileUploadInput } from './components/CreatePost/FileUploadInput';
 import { HeaderWithClose } from './components/HeaderWithClose';
 import { OverlayModal } from './components/OverlayModal';
+import { useMyContext } from './ContextProvider';
 
 import './CreatePost.css'
 
@@ -24,7 +25,7 @@ const initialState = {
 };
 
 export default function CreatePost({
-  updateOverlayVisibility, updatePosts, posts
+  updatePosts, posts
 }) {
   /* 1. Create local state with useState hook */
   const [formState, updateFormState] = useState(initialState)
@@ -33,6 +34,7 @@ export default function CreatePost({
   const [latLong, setLatLong] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [fileLoaded, setFileLoaded] = useState(false);
+  const { setCreatePostNotVisible } = useMyContext();
 
   async function search(query) {
     if (query.length > 0) {
@@ -96,7 +98,7 @@ export default function CreatePost({
 
       updatePosts([...posts, { ...postInfo, image: formState.file, owner: username }]); // updated
       updateFormState(currentState => ({ ...currentState, saving: false }));
-      updateOverlayVisibility(false);
+      setCreatePostNotVisible();
     } catch (err) {
       console.log('error: ', err);
     }
@@ -122,7 +124,7 @@ export default function CreatePost({
   return (
     <>
       <OverlayModal>
-          <HeaderWithClose textContent={'Create Post'} onClick={() => updateOverlayVisibility(false)} />
+          <HeaderWithClose textContent={'Create Post'} onClick={() => setCreatePostNotVisible()} />
           <Flex direction="column" wrap="nowrap">
             <TextField
               maxLength={30}

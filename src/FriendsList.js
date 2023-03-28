@@ -7,22 +7,26 @@ import { HeaderWithClose } from './components/HeaderWithClose';
 import { OverlayModal } from './components/OverlayModal';
 import './FriendsList.css'
 import './CreatePost.css'
+import { useMyContext } from './ContextProvider';
 
 export default function FriendsList({
-    updateOverlayVisibility, currentLoggedInUser, friends, incomingFriendRequests, outgoingFriendRequests
+    outgoingFriendRequests
 }) {
     const [showAddFriendOverlay, setShowAddFriendOverlay] = useState(false);
     const [showIncomingFriendRequestsOverlay, setShowIncomingFriendRequestsOverlay] = useState(false);
     const [showFriendOverlay, setShowFriendOverlay] = useState(false);
     const [friendClicked, setFriendClicked] = useState(false);
 
-    if (!friends)
+    const { state, setFriendsListNotVisible } = useMyContext();
+    const { friendsUsernames, incomingFriendRequests } = state;
+    
+    if (!friendsUsernames)
         return <>Loading...</>;
     return (
         <>
             <OverlayModal>
-                <HeaderWithClose textContent={'Friends List'} onClick={() => updateOverlayVisibility(false)} />
-                <Flex>{friends.map((result, index) => {
+                <HeaderWithClose textContent={'Friends List'} onClick={() => setFriendsListNotVisible()} />
+                <Flex>{friendsUsernames.map((result, index) => {
                     return <Button
                     backgroundColor={"#2b2a33"}
                     size="small"
@@ -32,11 +36,11 @@ export default function FriendsList({
                     textAlign={"center"}
                         name="Location"
                         onClick={() => {
-                            setFriendClicked(result.username);
+                            setFriendClicked(result);
                             setShowFriendOverlay(true)
                         }}
                         key={index}>
-                        {result.username}
+                        {result}
                     </Button>
                 })}
                 </Flex>
@@ -45,9 +49,9 @@ export default function FriendsList({
                     <Button fontSize={'12px'} height='40px' size="small" variation="primary" style={{ marginTop: 5 }} onClick={() => setShowIncomingFriendRequestsOverlay(true)}>{incomingFriendRequests.length} Friend Requests</Button>
                 </Grid>
             </OverlayModal>
-            {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} friends={friends} outgoingFriendRequests={outgoingFriendRequests} />}
-            {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay incomingFriendRequests={incomingFriendRequests} friends={friends} showOverlay={setShowIncomingFriendRequestsOverlay} />}
-            {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} username={friendClicked} currentLoggedInUser={currentLoggedInUser} userFriends={friends} />}
+            {showAddFriendOverlay && <AddFriendDiv showOverlay={setShowAddFriendOverlay} outgoingFriendRequests={outgoingFriendRequests} />}
+            {showIncomingFriendRequestsOverlay && <FriendsRequestOverlay showOverlay={setShowIncomingFriendRequestsOverlay} />}
+            {showFriendOverlay && <FriendOverlay showOverlay={setShowFriendOverlay} selectedFriend={friendClicked} />}
         </>
     )
 }

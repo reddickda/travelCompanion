@@ -5,14 +5,17 @@ import { signOut } from "./utils";
 import { BsCalendarEvent } from 'react-icons/bs';
 import DatePicker from "react-datepicker";
 import { getPostsByDate } from "./helpers/apiHelpers";
+import { useMyContext } from "./ContextProvider";
 
 import "react-datepicker/dist/react-datepicker.css";
 import './Header.css';
 
-export default function Header({ myFriends, updateFriendsListVis, setFriendsPosts }) {
+export default function Header() {
   const [loggedInUser, setLoggedInUser] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [startDate, setStartDate] = useState(new Date())
+  const { state, setFriendsListVisible, updateMyFriendsPosts } = useMyContext();
+  const { friendsUsernames } = state;
 
   useEffect(() => {
     async function fetchData() {
@@ -25,11 +28,10 @@ export default function Header({ myFriends, updateFriendsListVis, setFriendsPost
   useEffect(() => {
     async function getFriendsPostsByDate() {
       try {
-        const friends = myFriends.map(friend => friend.username)
         const posts = await getPostsByDate(startDate);
 
-        var friendsPostsArray = posts.filter(post => friends.indexOf(post.username) >= 0)
-        setFriendsPosts(friendsPostsArray);
+        var friendsPostsArray = posts.filter(post => friendsUsernames.indexOf(post.username) >= 0)
+        updateMyFriendsPosts(friendsPostsArray);
       } catch (error) {
         console.log('Error fetching posts:', error);
       }
@@ -44,7 +46,7 @@ export default function Header({ myFriends, updateFriendsListVis, setFriendsPost
       <Card variation={'elevated'} style={{ borderRadius: 0, backgroundColor: '#3f4343', position: 'fixed', top: 0, zIndex: 9999, width: '100%' }}>
         <Grid height={50} justifyContent={'center'} alignItems={'center'} columnGap="0.5rem" templateColumns={"1fr 1fr 1fr"}>
           <Flex justifyContent={'flex-start'} paddingLeft={10}>
-            <Button color={'#bcbec2'} onClick={() => updateFriendsListVis(true)}>Friends</Button>
+            <Button color={'#bcbec2'} onClick={() => setFriendsListVisible()}>Friends</Button>
           </Flex>
           <Heading textAlign={'center'} justifyContent='center' color='#bcbec2' width='30vw' level={6}>My Friend Map</Heading>
           <Flex paddingRight={10} justifyContent={'flex-end'} >

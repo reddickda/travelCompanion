@@ -5,13 +5,16 @@ import { Auth } from 'aws-amplify';
 import { Heading, Button, Grid } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
 import { OverlayModal } from './OverlayModal';
+import { useMyContext } from '../ContextProvider';
 import '../CreatePost.css'
 
-export default function FriendsRequestOverlay({ showOverlay, friends, incomingFriendRequests }) {
+export default function FriendsRequestOverlay({ showOverlay,  }) {
     const [showRequest, setShowRequest] = useState(false);
-
     const [userToAdd, setUserToAdd] = useState("");
     const [currentLoggedInUser, setCurrentLoggedInUser] = useState("");
+
+    const { state } = useMyContext();
+    const { friendsUsernames, incomingFriendRequests } = state;
 
     useEffect(() => {
         async function fetchData() {
@@ -25,7 +28,7 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
     }
 
     async function acceptRequest(userId, newFriend) {
-        await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
+        await tryAcceptFriendRequest(userId, newFriend, friendsUsernames, incomingFriendRequests)
     }
 
     async function rejectRequest(userId, newFriend) {

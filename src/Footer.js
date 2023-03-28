@@ -3,8 +3,10 @@ import { Button, Grid, Card, Flex } from "@aws-amplify/ui-react"
 import { Link } from 'react-router-dom'
 import './Header.css';
 import { AiOutlinePlus} from "react-icons/ai"
+import { useMyContext } from "./ContextProvider";
 
-export default function Footer({ updateOverlayVisibility }) {
+export default function Footer() {
+    const { setCreatePostVisible } = useMyContext();
     // const [buttonBottom, setButtonBottom] = useState(20);
     // const [scrollDir, setScrollDir] = useState("scrolling down");
 
@@ -35,7 +37,7 @@ export default function Footer({ updateOverlayVisibility }) {
                     <Button height={40} size="small"><Link style={linkStyle} to="/">Friends Posts</Link></Button>
                 </Flex>
                 <Flex justifyContent={'center'}>
-                    <Button height={40} onClick={() => updateOverlayVisibility(true)}><AiOutlinePlus color="#bcbec2" /></Button>
+                    <Button height={40} onClick={() => setCreatePostVisible()}><AiOutlinePlus color="#bcbec2" /></Button>
                 </Flex>
                 <Flex justifyContent={'flex-end'} paddingRight={10}>
                     <Button height={40} size="small"><Link style={linkStyle} to="/myPosts">My Posts</Link></Button>
