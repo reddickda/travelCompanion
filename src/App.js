@@ -8,7 +8,7 @@ import {
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
-import { Heading, Button, withAuthenticator } from '@aws-amplify/ui-react';
+import { Heading, withAuthenticator } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay } from "./helpers/apiHelpers";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
@@ -128,10 +128,11 @@ function App() {
     updatePosts(postsArray);
     updateMyFriendsPosts(friendsPostsArray)
   }
+  console.log({myFriendsPosts})
 
   return (
     <div className={wrapperDiv}>
-      <Header logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
+      <Header myFriends={myFriendsList} setFriendsPosts={updateMyFriendsPosts} logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
       <HashRouter>
         <div className={contentStyle}>
           <Routes>

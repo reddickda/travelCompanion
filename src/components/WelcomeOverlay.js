@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './WelcomeOverlay.css';
 import { BsGlobeAmericas } from 'react-icons/bs';
+
+import './WelcomeOverlay.css';
 
 const WelcomeOverlay = () => {
     const [showOverlay, setShowOverlay] = useState(true);

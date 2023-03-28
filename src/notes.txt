@@ -24,8 +24,14 @@ TODO:
 // look into caching of responses
 // test friend requests with holly and try to break
 // the welcome overlay shows up on verify too
+// icon tagging for "hike, walk, bar, food, dog" etc - allow filtering by this
+// use react profiler 
+// create post on mobile outside of modal
+// add MY posts by date too - test
+// use aws location search
 
 // TODO - strange bug where friend object was added
+// THIS HAPPENS ON ACCEPT FRIEND REQUEST - keep testing
 
 //Friend Notes: 
 // friends list displayed on click friend

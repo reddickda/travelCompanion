@@ -1,10 +1,8 @@
 import React from 'react';
-import './AddFriendDiv.css'
 import { tryRemoveFriend } from '../helpers/apiRemoveFriendHelper'
-import { Card, Button, Grid } from '@aws-amplify/ui-react';
+import { Button, Grid } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
-import '../CreatePost.css'
-import './AddFriendDiv.css'
+import { OverlayModal } from './OverlayModal';
 
 export default function RemoveFriendOverlay({ showRemoveOverlay, username, currentLoggedInUser, showParentOverlay, userFriends }) {
 
@@ -15,14 +13,12 @@ export default function RemoveFriendOverlay({ showRemoveOverlay, username, curre
     }
 
     return (
-        <div className="overlay">
-            <Card padding={5} variation={"elevated"} className='container-style'>
-                <HeaderWithClose textContent={'Are you sure?'} onClick={() => showRemoveOverlay(false)} />
-                <Grid height="100%" alignItems={'flex-end'} columnGap="1rem" templateColumns={"1fr 1fr"}>
-                    <div></div>
-                    <Button variation="destructive" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => removeFriend()}>Remove</Button>
-                </Grid>
-            </Card>
-        </div>
+        <OverlayModal>
+            <HeaderWithClose textContent={'Are you sure?'} onClick={() => showRemoveOverlay(false)} />
+            <Grid height="100%" alignItems={'flex-end'} columnGap="1rem" templateColumns={"1fr 1fr"}>
+                <div></div>
+                <Button variation="destructive" size="small" height="30px" style={{ marginTop: 5 }} onClick={() => removeFriend()}>Remove</Button>
+            </Grid>
+        </OverlayModal>
     )
 }

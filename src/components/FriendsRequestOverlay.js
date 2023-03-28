@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { tryAcceptFriendRequest } from "../helpers/apiAcceptFriendRequestHelper";
 import { tryRejectFriendRequest } from '../helpers/apiRejectFriendRequestHelper';
 import { Auth } from 'aws-amplify';
-import { Card, Heading, Button, Flex, Grid } from '@aws-amplify/ui-react';
+import { Heading, Button, Grid } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
+import { OverlayModal } from './OverlayModal';
 import '../CreatePost.css'
 
 export default function FriendsRequestOverlay({ showOverlay, friends, incomingFriendRequests }) {
@@ -24,44 +25,40 @@ export default function FriendsRequestOverlay({ showOverlay, friends, incomingFr
     }
 
     async function acceptRequest(userId, newFriend) {
-        var result = await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
+        await tryAcceptFriendRequest(userId, newFriend, friends, incomingFriendRequests)
     }
 
     async function rejectRequest(userId, newFriend) {
-        var result = await tryRejectFriendRequest(userId, newFriend, incomingFriendRequests)
+         await tryRejectFriendRequest(userId, newFriend, incomingFriendRequests)
     }
 
     return (
         <>
-            <div className="overlay">
-                <Card padding={5} variation={"elevated"} className='container-style'>
-                    <HeaderWithClose textContent={'Friend Requests'} onClick={() => showOverlay(false)} />
-                    <div className='scrollable-div'>{incomingFriendRequests.map((result, index) => {
-                        return <ul
-                            className='scrollable-ul'
-                            name="User"
-                            onClick={() => {
-                                setShowRequest(true)
-                                setUserToAdd(result)
-                            }}
-                            key={index}>
-                            {result}
-                        </ul>
-                    })}
-                    </div>
-                </Card>
-                {showRequest &&
-                    <div style={{ zIndex: 10001 }} className="overlay">
-                        <Card padding={5} variation={"elevated"} className='container-style'>
-                            <HeaderWithClose textContent={'Accept Request from'} onClick={() => setShowRequest(false)} />
-                            <Heading textAlign={'center'} width='100%' level={5}>{userToAdd}</Heading>
-                            <Grid height={'100%'} alignItems='flex-end' templateColumns={'1fr 1fr'} columnGap={'1em'} >
-                                <Button height={'40px'} size="small" variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept</Button>
-                                <Button height={'40px'} size="small" variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject</Button>
-                            </Grid>
-                        </Card>
-                    </div>}
-            </div>
+            <OverlayModal>
+                <HeaderWithClose textContent={'Friend Requests'} onClick={() => showOverlay(false)} />
+                <div className='scrollable-div'>{incomingFriendRequests.map((result, index) => {
+                    return <ul
+                        className='scrollable-ul'
+                        name="User"
+                        onClick={() => {
+                            setShowRequest(true)
+                            setUserToAdd(result)
+                        }}
+                        key={index}>
+                        {result}
+                    </ul>
+                })}
+                </div>
+            </OverlayModal>
+            {showRequest &&
+                <OverlayModal>
+                    <HeaderWithClose textContent={'Accept Request from'} onClick={() => setShowRequest(false)} />
+                    <Heading textAlign={'center'} width='100%' level={5}>{userToAdd}</Heading>
+                    <Grid height={'100%'} alignItems='flex-end' templateColumns={'1fr 1fr'} columnGap={'1em'} >
+                        <Button height={'40px'} size="small" variation='primary' onClick={() => { setShowRequest(false); acceptRequest(currentLoggedInUser, userToAdd); }}>Accept</Button>
+                        <Button height={'40px'} size="small" variation="destructive" onClick={() => { setShowRequest(false); rejectRequest(currentLoggedInUser, userToAdd); }}>Reject</Button>
+                    </Grid>
+                </OverlayModal>}
         </>
     )
 }

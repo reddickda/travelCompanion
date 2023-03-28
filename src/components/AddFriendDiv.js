@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './AddFriendDiv.css'
 import { getAllUsers } from '../helpers/apiHelpers'
 import ScrollableFriendsListOverlay from './ScrollableFriendsListOverlay';
 import { Auth } from 'aws-amplify';
-import { Card, Heading, Button, SearchField, Flex } from '@aws-amplify/ui-react';
+import { SearchField, Flex } from '@aws-amplify/ui-react';
 import { HeaderWithClose } from './HeaderWithClose';
+import { OverlayModal } from './OverlayModal';
 
-import '../CreatePost.css'
 import './AddFriendDiv.css'
 
 export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, friends }) {
@@ -45,7 +44,7 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
         }
 
         const handleSubmit = (event) => {
-            let returnedUsers = searchFriends(event.target.value)
+            let returnedUsers = searchFriends(event)
             if (returnedUsers.length === 1 && returnedUsers[0] === currentLoggedInUser) {
                 return null;
             } else {
@@ -53,18 +52,18 @@ export default function AddFriendDiv({ showOverlay, outgoingFriendRequests, frie
             }
         }
 
-        return <SearchField size="small" className="input-style" type="text" onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
+        return <SearchField size="small" className="input-style" type="text" onSubmit={(event) => handleSubmit(event)} onKeyDown={handleKeyDown} placeholder={selectedUser.length === 0 ? "Search For User" : selectedUser} />
     }
 
     return (
-        <div className="overlay">
-            <Card padding={5} variation={"elevated"} className='container-style'>
-                <HeaderWithClose textContent='Adding Friend' onClick={() => showOverlay(false)} /> 
+        <>
+            <OverlayModal>
+                <HeaderWithClose textContent='Adding Friend' onClick={() => showOverlay(false)} />
                 <Flex direction="column" height={"100%"}>
                     <FriendSearch />
                 </Flex>
-            </Card>
+            </OverlayModal>
             {searchResults.length > 0 && <ScrollableFriendsListOverlay currentUser={currentLoggedInUser} data={searchResults} setSearchResults={setSearchResults} outgoingFriendRequests={outgoingFriendRequests} friends={friends} />}
-        </div>
+        </>
     )
 }
