@@ -28,6 +28,7 @@ TODO:
 // use react profiler 
 // create post on mobile outside of modal
 // add MY posts by date too - test
+// use aws location search
 
 // TODO - strange bug where friend object was added
 // THIS HAPPENS ON ACCEPT FRIEND REQUEST - keep testing
