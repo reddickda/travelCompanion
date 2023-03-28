@@ -128,10 +128,11 @@ function App() {
     updatePosts(postsArray);
     updateMyFriendsPosts(friendsPostsArray)
   }
+  console.log({myFriendsPosts})
 
   return (
     <div className={wrapperDiv}>
-      <Header logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
+      <Header myFriends={myFriendsList} setFriendsPosts={updateMyFriendsPosts} logout={setLoggedIn} updateFriendsListVis={updateFriendsListVis} updateOverlayVisibility={updateOverlayVisibility} />
       <HashRouter>
         <div className={contentStyle}>
           <Routes>

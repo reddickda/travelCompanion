@@ -64,3 +64,20 @@ export async function getPostsLastDay() {
     authMode: 'AMAZON_COGNITO_USER_POOLS'
   })
 }
+
+export async function getPostsByDate(createdDate) {
+  const startDate = new Date(createdDate);
+  const endDate = new Date(createdDate);
+  endDate.setDate(endDate.getDate() + 1);
+  endDate.setMilliseconds(endDate.getMilliseconds() - 1);
+
+  const result = await API.graphql(graphqlOperation(listPosts, {
+    filter: {
+      createdAt: {
+        between: [startDate.toISOString(), endDate.toISOString()]
+      }
+    }
+  }));
+
+  return result.data.listPosts.items;
+}
