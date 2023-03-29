@@ -123,9 +123,9 @@ export default function CreatePost({
 
   return (
     <>
-      <OverlayModal>
+      <OverlayModal backgroundColor={'rgba(0, 0, 0, 0.7)'}>
           <HeaderWithClose textContent={'Create Post'} onClick={() => setCreatePostNotVisible()} />
-          <Flex direction="column" wrap="nowrap">
+          <Flex height={'100%'} direction="column" wrap="nowrap">
             <TextField
               maxLength={30}
               placeholder="Post name"
@@ -142,11 +142,11 @@ export default function CreatePost({
               size="small"
             />
             <FileUploadInput fileInputDiv={fileInputDiv} fileUploaded={fileLoaded} onChangeFile={onChangeFile} />
-            {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
           </Flex>
           <Grid height="100%" alignItems={'flex-end'} columnGap="0.5rem" templateColumns={"1fr 1fr"}>
             {/* { formState.file && <img className={imageStyle} alt="preview" src={formState.file} /> } */}
             <Button variation="primary" height={"30px"} size={"small"} onClick={save}>Create</Button>
+            {formState.saving && <p className={savingMessageStyle}>Saving post...</p>}
           </Grid>
         </OverlayModal>
         {showSearchResults && <SearchResults
@@ -161,6 +161,7 @@ export default function CreatePost({
 
 const savingMessageStyle = css`
   margin-bottom: 0px;
+  font-size: 12px;
 `
 
 const fileInputDiv = { display: 'flex', justifyContent: 'center', backgroundColor: '#047d95', borderRadius: 5 }

@@ -69,7 +69,6 @@ function MarkerWithPopup({ latitude, longitude, username, description, image, in
 }
 
 function AwsMap({ posts }) {
-    console.log({posts})
     return (
         <View>
             <Flex direction={'column'} alignItems={'center'}>

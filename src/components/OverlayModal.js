@@ -4,7 +4,7 @@ import './OverlayModal.css'
 export const OverlayModal = (props) => {
 
     return (
-        <div className="overlay">
+        <div style={{backgroundColor: `${props.backgroundColor}`}} className="overlay">
             <Card padding={5} variation={"elevated"} className="container-style">
                 {props.children}
             </Card>
