@@ -8,7 +8,7 @@ import {
 import { css } from '@emotion/css';
 import { Storage, Auth, API, graphqlOperation } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
-import { Heading, withAuthenticator } from '@aws-amplify/ui-react';
+import { Heading, withAuthenticator, Card, Text } from '@aws-amplify/ui-react';
 import { createApiUser, getCurrentApiUser, getPostsLastDay, getPostsByIds } from "./helpers/apiHelpers";
 import CreatePost from "./CreatePost";
 import FriendsList from "./FriendsList";
@@ -20,6 +20,7 @@ import LoginHeading from "./LoginHeading";
 import WelcomeOverlay from './components/WelcomeOverlay';
 import { useMyContext } from "./ContextProvider";
 import './App.css'
+import AlphaHeader from "./AlphaHeader";
 
 
 const components = {
@@ -35,6 +36,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [posts, updatePosts] = useState([]);
   const [myPosts, updateMyPosts] = useState([]);
+  const [showAlphaOverlay, setShowAlphaOverlay] = useState(false);
   // const [myFriendsPosts, updateMyFriendsPosts] = useState([]);
 
   const { state, updateLoggedInUser, updateFriendsUsernames, updateFriendsData, updateIncomingFriendRequests, updateOutgoingFriendRequests, updateMyFriendsPosts } = useMyContext();
@@ -43,8 +45,17 @@ function App() {
   function assessLoggedInState() {
     Auth.currentAuthenticatedUser()
       .then((sess) => {
+        console.log(sess.attributes.sub)
         console.log("logged in")
-        setLoggedIn(true);
+      // only david is allowed in right now
+        if(sess.attributes.sub !== "7695b25b-54d1-470f-875c-b7db2d007906"){
+          console.log("here")
+          setShowAlphaOverlay(true);
+          setLoggedIn(false);
+        }else{
+          setShowAlphaOverlay(false);
+          setLoggedIn(true);
+        }
       }).catch(() => {
         console.log("not logged in")
         setLoggedIn(false);
@@ -53,6 +64,7 @@ function App() {
 
   useEffect(() => {
     assessLoggedInState();
+    console.log(loggedIn)
     if (loggedIn) { // TODO set logic for showing the map or showing a new custom login
       fetchPostsAndSetPostState();
     }
@@ -167,6 +179,12 @@ function App() {
 
   return (
     <div className={wrapperDiv}>
+      {showAlphaOverlay && <div style={{ position: 'absolute', height: '100vh', width: '100vw', zIndex: 100000, backgroundColor: '#0d1a26' }}>
+      <AlphaHeader logout={setLoggedIn} />
+        <div style={{display:'flex', width:'100vw', height:'100vh', justifyContent:'center', alignItems: 'center'}}>
+        <Card borderRadius={10} width={200} padding={5} style={{backgroundColor: '#304050'}}><Text>This project is in its alpha stages. For more info contact the creator at reddickdav@gmail.com</Text></Card>
+        </div>
+        </div>}
       <Header logout={setLoggedIn} />
       <HashRouter>
         <div className={contentStyle}>

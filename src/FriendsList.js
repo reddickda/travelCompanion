@@ -24,9 +24,9 @@ export default function FriendsList({
         return <>Loading...</>;
     return (
         <>
-            <OverlayModal>
+            <OverlayModal backgroundColor={'rgba(0, 0, 0, 0.7)'}>
                 <HeaderWithClose textContent={'Friends List'} onClick={() => setFriendsListNotVisible()} />
-                <Flex>{friendsUsernames.map((result, index) => {
+                <Flex overflow={'auto'} height="100%" direction={"column"}>{friendsUsernames.map((result, index) => {
                     return <Button
                     backgroundColor={"#2b2a33"}
                     size="small"
